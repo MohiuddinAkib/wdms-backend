@@ -1,5 +1,7 @@
 <?php
 
+use App\Domain\User\Projectors\UsersProjector;
+
 return [
 
     /*
@@ -22,7 +24,7 @@ return [
      * Projectors can be registered in this array or a service provider.
      */
     'projectors' => [
-        // App\Projectors\YourProjector::class
+        UsersProjector::class
     ],
 
     /*

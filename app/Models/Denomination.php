@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\EventSourcing\Projections\Projection;
 
-class Denomination extends Model
+class Denomination extends Projection
 {
     use HasFactory;
 }

@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\EventSourcing\Projections\Projection;
 
-class Wallet extends Model
+class Wallet extends Projection
 {
     use HasFactory;
 }
