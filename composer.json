@@ -11,7 +11,8 @@
         "laravel/tinker": "^2.9",
         "spatie/laravel-data": "^4.6",
         "spatie/laravel-event-sourcing": "^7.6",
-        "spatie/laravel-query-builder": "^6.0"
+        "spatie/laravel-query-builder": "^6.0",
+        "tzsk/otp": "^8.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.0",

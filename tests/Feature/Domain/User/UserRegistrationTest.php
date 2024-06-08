@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers;
+namespace Tests\Feature\Domain\User;
 
 use Tests\TestCase;
 use App\Models\User;
@@ -10,11 +10,11 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEvent;
 
-class AuthControllerTest extends TestCase
+class UserRegistrationTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    public function test_needs_to_provide_email_and_password(): void
+    public function test_needs_to_provide_email_and_password_for_user_registration(): void
     {
         $response = $this->postJson(route('auth.register'), [
             
@@ -28,7 +28,7 @@ class AuthControllerTest extends TestCase
             ]);
     }
 
-    public function test_password_should_be_min_of_8_characters_long(): void
+    public function test_password_should_be_min_of_8_characters_long_for_user_registration(): void
     {
         $dto = new RegisterUserData(
             name: $this->faker->name(),
@@ -44,7 +44,7 @@ class AuthControllerTest extends TestCase
             ]);
     }
 
-    public function test_email_needs_to_be_unique(): void
+    public function test_email_needs_to_be_unique_for_user_registration(): void
     {
         $user = User::factory()->create();
         $dto = new RegisterUserData(
@@ -55,14 +55,13 @@ class AuthControllerTest extends TestCase
 
         $response = $this->postJson(route('auth.register'), $dto->toArray());
 
-        $response->dump();
         $response->assertUnprocessable()
             ->assertJsonValidationErrors([
                 'email' => 'The email has already been taken.',
             ]);
     }
 
-    public function test_email_should_be_valid_email(): void
+    public function test_email_should_be_valid_email_for_user_registration(): void
     {
         $dto = new RegisterUserData(
             name: $this->faker->name(),
@@ -78,7 +77,7 @@ class AuthControllerTest extends TestCase
             ]);
     }
     
-    public function test_should_register_user(): void
+    public function test_should_register_user_for_user_registration(): void
     {
         $response = $this->postJson(route('auth.register'), [
             'name' => $name = $this->faker->name(),

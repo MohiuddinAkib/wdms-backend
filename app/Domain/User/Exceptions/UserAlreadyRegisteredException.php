@@ -2,7 +2,7 @@
 
 namespace App\Domain\User\Exceptions;
 
-use DomainException;
+use App\Support\DomainException;
 
 class UserAlreadyRegisteredException extends DomainException {
 }
