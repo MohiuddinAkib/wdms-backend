@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Wallet;
-use Illuminate\Http\Request;
+use App\Domain\Wallet\Dto\CreateWalletData;
+use App\Domain\Wallet\Projections\Wallet;
+use App\Domain\Wallet\Resources\CreateWalletResponseResource;
+use App\Domain\Wallet\Resources\WalletResource;
+use App\Domain\Wallet\WalletAggregate;
+use Str;
 
 class WalletController extends Controller
 {
@@ -18,25 +22,31 @@ class WalletController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateWalletData $data): CreateWalletResponseResource
     {
-        //
-    }
+        $walletId = (string)Str::uuid();
+        
+        WalletAggregate::retrieve($walletId)
+            ->createWallet(auth()->user()->uuid, $data->currency)
+            ->persist();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Wallet $wallet)
-    {
-        //
-    }
+        $createdWallet = Wallet::find($walletId);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Wallet $wallet)
-    {
-        //
+        if (is_null($createdWallet)) {
+            return new CreateWalletResponseResource(
+                success: false,
+                message: 'Failed to create wallet',
+                data: null
+            );
+        }
+
+        $createdWalletResource = WalletResource::from($createdWallet);
+
+        return new CreateWalletResponseResource(
+            success: true,
+            message: 'Wallet created successfully',
+            data: $createdWalletResource
+        );
     }
 
     /**

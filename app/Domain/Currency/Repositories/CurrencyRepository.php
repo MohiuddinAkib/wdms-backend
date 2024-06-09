@@ -4,15 +4,15 @@ namespace App\Domain\Currency\Repositories;
 
 use App\Domain\Currency\Contracts\CurrencyRepository as ContractsCurrencyRepository;
 use Illuminate\Support\Collection;
-use App\Domain\Currency\Resources\CurrencyData;
-use App\Domain\Currency\Resources\DenominationData;
+use App\Domain\Currency\Resources\CurrencyResource;
+use App\Domain\Currency\Resources\DenominationResource;
 
 class CurrencyRepository implements ContractsCurrencyRepository
 {
     public function getCurrencies(): Collection
     {
         return collect(config('wallet.currencies', []))
-            ->map(fn (array $entry, string $code) => new CurrencyData(
+            ->map(fn (array $entry, string $code) => new CurrencyResource(
                 $code,
                 data_get($entry, 'name')
             ))
@@ -25,7 +25,7 @@ class CurrencyRepository implements ContractsCurrencyRepository
          * @param array{name: string, value: float|int} $denomination
          */
         $coins = collect(config("wallet.currencies.{$currency}.coins", []))
-            ->map(fn (array $denomination) => new DenominationData(
+            ->map(fn (array $denomination) => new DenominationResource(
                 name: $denomination['name'],
                 value: $denomination['value'],
                 type: 'coin'
@@ -35,12 +35,17 @@ class CurrencyRepository implements ContractsCurrencyRepository
          * @param array{name: string, value: float|int} $denomination
          */
         $bills = collect(config("wallet.currencies.{$currency}.bills", []))
-            ->map(fn (array $denomination) => new DenominationData(
+            ->map(fn (array $denomination) => new DenominationResource(
                 name: $denomination['name'],
                 value: $denomination['value'],
                 type: 'bill'
             ));
 
-        return $coins->merge($bills)->values()->unique(fn (DenominationData $denomination) => $denomination->name . $denomination->type . $denomination->value);
+        return $coins->merge($bills)->values()->unique(fn (DenominationResource $denomination) => $denomination->name . $denomination->type . $denomination->value);
+    }
+
+    public function isCurrencySupported(string $currency): bool
+    {
+        return config()->has("wallet.currencies.{$currency}");
     }
 }

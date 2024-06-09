@@ -2,9 +2,9 @@
 
 namespace App\Domain\Currency\Resources;
 
-use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Resource;
 
-class CurrencyData extends Data
+class CurrencyResource extends Resource
 {
     public function __construct(
         public string $code,
