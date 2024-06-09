@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Domain\User;
 
-use Tests\TestCase;
-use App\Models\User;
 use App\Domain\Auth\Dto\RegisterUserData;
 use App\Domain\User\Events\UserRegistered;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEvent;
+use Tests\TestCase;
 
 class UserRegistrationTest extends TestCase
 {
@@ -17,14 +17,14 @@ class UserRegistrationTest extends TestCase
     public function test_needs_to_provide_email_and_password_for_user_registration(): void
     {
         $response = $this->postJson(route('auth.register'), [
-            
+
         ]);
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors([
                 'name',
                 'email',
-                'password'
+                'password',
             ]);
     }
 
@@ -33,7 +33,7 @@ class UserRegistrationTest extends TestCase
         $dto = new RegisterUserData(
             name: $this->faker->name(),
             email: $this->faker->email(),
-            password: "123456"
+            password: '123456'
         );
 
         $response = $this->postJson(route('auth.register'), $dto->toArray());
@@ -76,13 +76,13 @@ class UserRegistrationTest extends TestCase
                 'email' => 'The email field must be a valid email address.',
             ]);
     }
-    
+
     public function test_should_register_user_for_user_registration(): void
     {
         $response = $this->postJson(route('auth.register'), [
             'name' => $name = $this->faker->name(),
             'email' => $email = $this->faker->email(),
-            'password' => $this->faker->password(8)
+            'password' => $this->faker->password(8),
         ]);
 
         $response->assertCreated()
@@ -90,12 +90,12 @@ class UserRegistrationTest extends TestCase
                 'success' => true,
                 'message' => 'Registration successful',
             ]);
-        
+
         /** @var EloquentStoredEvent */
         $eventModel = EloquentStoredEvent::query()
             ->whereEvent(UserRegistered::class)
             ->first();
-        
+
         /** @var UserRegistered */
         $event = $eventModel->toStoredEvent()->event;
 
@@ -103,7 +103,7 @@ class UserRegistrationTest extends TestCase
         $this->assertDatabaseHas(User::getModel()->getTable(), [
             'name' => $name,
             'email' => $email,
-            'uuid' => $event->userId
+            'uuid' => $event->userId,
         ]);
     }
 }

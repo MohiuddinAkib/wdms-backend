@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Domain\User\UserAggregate;
-use Illuminate\Support\Facades\Hash;
 use App\Domain\Auth\Dto\LoginUserData;
-use App\Domain\Auth\Dto\RequestOtpData;
 use App\Domain\Auth\Dto\RegisterUserData;
+use App\Domain\Auth\Dto\RequestOtpData;
+use App\Domain\User\UserAggregate;
+use App\Models\User;
 use App\Notifications\LoginOtpNotification;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpFoundation\Response;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -27,7 +27,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Registration successful'
+            'message' => 'Registration successful',
         ], Response::HTTP_CREATED);
     }
 
@@ -37,16 +37,16 @@ class AuthController extends Controller
         $user = User::whereEmail($data->email)->first();
 
         $validationError = ValidationException::withMessages([
-            'email' => [trans('auth.failed')]
+            'email' => [trans('auth.failed')],
         ]);
 
-        if(is_null($user)) {
-           throw $validationError;
+        if (is_null($user)) {
+            throw $validationError;
         }
 
         $passwordMatched = Hash::check($data->password, $user->getAuthPassword());
 
-        if(!$passwordMatched) {
+        if (! $passwordMatched) {
             throw $validationError;
         }
 
@@ -54,12 +54,10 @@ class AuthController extends Controller
 
         $user->notify(new LoginOtpNotification($otp));
 
-        
-
-        if($request->wantsJson()) {
+        if ($request->wantsJson()) {
             return response([
                 'success' => true,
-                'message' => 'An otp has been sent to your mail.'
+                'message' => 'An otp has been sent to your mail.',
             ]);
         }
 
@@ -71,35 +69,35 @@ class AuthController extends Controller
         $matched = otp()->check($data->otp, $data->email);
 
         $validationError = ValidationException::withMessages([
-            'otp' => ['Otp mismatched.']
+            'otp' => ['Otp mismatched.'],
         ]);
 
-        if(!$matched) {
+        if (! $matched) {
             throw $validationError;
         }
 
         /** @var User|null */
         $user = User::whereEmail($data->email)->first();
-       
-        if(is_null($user)) {
+
+        if (is_null($user)) {
             throw $validationError;
         }
 
         if (EnsureFrontendRequestsAreStateful::fromFrontend($request)) {
             auth()->login($user);
 
-            if($request->hasSession()) {
+            if ($request->hasSession()) {
                 $request->session()->regenerate();
             }
 
             // FOR SPA NO NEED FOR ACCESS TOKEN
-            if($request->wantsJson()) {
+            if ($request->wantsJson()) {
                 return response([
                     'success' => true,
                     'message' => 'Login successful.',
                 ]);
             }
-            
+
             // IF NOT SPA BUT TRADITIONAL HTML SERVED BY LARAVEL
             return redirect()->intended('/');
         }

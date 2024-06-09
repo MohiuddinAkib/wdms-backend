@@ -4,8 +4,8 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 class LoginOtpNotification extends Notification implements ShouldQueue
 {
@@ -35,7 +35,7 @@ class LoginOtpNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('Your otp is: ' . $this->otp);
+            ->line('Your otp is: '.$this->otp);
     }
 
     /**

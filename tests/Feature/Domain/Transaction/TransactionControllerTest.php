@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Domain\Transaction;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class TransactionControllerTest extends TestCase

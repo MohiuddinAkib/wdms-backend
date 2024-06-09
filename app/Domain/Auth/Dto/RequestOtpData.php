@@ -9,9 +9,10 @@ use Spatie\LaravelData\Data;
 class RequestOtpData extends Data
 {
     public function __construct(
-      #[Email()]
-      public string $email,
-      #[Min(8)]
-      public string $password
-    ) {}
+        #[Email()]
+        public string $email,
+        #[Min(8)]
+        public string $password
+    ) {
+    }
 }

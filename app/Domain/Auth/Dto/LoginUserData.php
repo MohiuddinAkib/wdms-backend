@@ -8,8 +8,9 @@ use Spatie\LaravelData\Data;
 class LoginUserData extends Data
 {
     public function __construct(
-      #[Email()]
-      public string $email,
-      public string $otp
-    ) {}
+        #[Email()]
+        public string $email,
+        public string $otp
+    ) {
+    }
 }

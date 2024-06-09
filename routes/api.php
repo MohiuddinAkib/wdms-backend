@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\CurrencyController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -18,3 +18,8 @@ Route::middleware('guest')
         // FOR MULTI FACTOR FIRST NEEDS TO GET OTP TOKEN
         Route::post('request-otp', [AuthController::class, 'requestOtp'])->name('request-otp');
     });
+
+Route::get('currencies', [CurrencyController::class, 'index'])->name('currency.index');
+
+Route::middleware('auth:sanctum')->group(function () {
+});

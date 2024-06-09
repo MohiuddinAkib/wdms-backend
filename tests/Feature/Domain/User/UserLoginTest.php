@@ -2,20 +2,19 @@
 
 namespace Tests\Feature\Domain\User;
 
+use App\Domain\Auth\Dto\RequestOtpData;
+use App\Models\User;
+use App\Notifications\LoginOtpNotification;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Notification;
 use Tests\TestCase;
-use App\Models\User;
 use Tzsk\Otp\Facades\Otp;
-use App\Domain\Auth\Dto\RequestOtpData;
-use App\Notifications\LoginOtpNotification;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserLoginTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    
     public function test_should_provide_email_and_password_for_user_login(): void
     {
         $response = $this->postJson(route('auth.request-otp'), [
@@ -25,7 +24,7 @@ class UserLoginTest extends TestCase
         $response->assertUnprocessable()
             ->assertJsonValidationErrors([
                 'email',
-                'password'
+                'password',
             ]);
     }
 
@@ -33,7 +32,7 @@ class UserLoginTest extends TestCase
     {
         $response = $this->postJson(route('auth.request-otp'), [
             'email' => $this->faker->email(),
-            'password' => $this->faker->password()
+            'password' => $this->faker->password(),
         ]);
 
         $response->assertUnprocessable()
@@ -42,10 +41,10 @@ class UserLoginTest extends TestCase
             ]);
 
         $user = User::factory()->create();
-        
+
         $response = $this->postJson(route('auth.request-otp'), [
             'email' => $user->email,
-            'password' => $this->faker->password()
+            'password' => $this->faker->password(),
         ]);
 
         $response->assertUnprocessable()
@@ -58,9 +57,9 @@ class UserLoginTest extends TestCase
     {
         Notification::fake();
         $user = User::factory()->create();
-        
+
         $otp = $this->faker->randomNumber(6);
-        
+
         Otp::shouldReceive('make')
             ->once()
             ->withArgs([$user->email])
@@ -77,10 +76,10 @@ class UserLoginTest extends TestCase
             ->assertOk()
             ->assertJson([
                 'success' => true,
-                'message' => 'An otp has been sent to your mail.'
+                'message' => 'An otp has been sent to your mail.',
             ]);
 
-        Notification::assertSentTo($user,  function (LoginOtpNotification $notification, array $channels) use ($otp) {
+        Notification::assertSentTo($user, function (LoginOtpNotification $notification, array $channels) use ($otp) {
             return $notification->otp === (string) $otp;
         });
 
@@ -94,7 +93,7 @@ class UserLoginTest extends TestCase
 
         $response = $this->postJson(route('auth.login'), [
             'email' => $user->email,
-            'otp' => (string)$this->faker->randomNumber(6)
+            'otp' => (string) $this->faker->randomNumber(6),
         ]);
 
         $response->assertUnprocessable()
@@ -110,11 +109,11 @@ class UserLoginTest extends TestCase
 
         $response = $this->postJson(route('auth.login'), [
             'email' => $user->email,
-            'otp' => (string)$otp
+            'otp' => (string) $otp,
         ],
-        [
-            'referer' => 'localhost'
-        ]);
+            [
+                'referer' => 'localhost',
+            ]);
 
         $response->assertOk()
             ->assertJson([
@@ -122,7 +121,7 @@ class UserLoginTest extends TestCase
                 'message' => 'Login successful.',
             ])
             ->assertJsonMissing([
-                'token'
+                'token',
             ]);
 
         $this->assertAuthenticatedAs($user);
@@ -135,11 +134,11 @@ class UserLoginTest extends TestCase
 
         $response = $this->post(route('auth.login'), [
             'email' => $user->email,
-            'otp' => (string)$otp
+            'otp' => (string) $otp,
         ],
-        [
-            'referer' => 'localhost'
-        ]);
+            [
+                'referer' => 'localhost',
+            ]);
 
         $response
             ->assertRedirect('/');
@@ -153,7 +152,7 @@ class UserLoginTest extends TestCase
 
         $response = $this->postJson(route('auth.login'), [
             'email' => $user->email,
-            'otp' => (string)$otp
+            'otp' => (string) $otp,
         ]);
 
         $response->assertOk()
@@ -162,7 +161,7 @@ class UserLoginTest extends TestCase
                 'message' => 'Login successful.',
             ])
             ->assertJsonStructure([
-                'token'
+                'token',
             ]);
     }
 }

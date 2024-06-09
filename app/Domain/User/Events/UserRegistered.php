@@ -11,7 +11,6 @@ class UserRegistered extends ShouldBeStored
         public string $name,
         public string $email,
         public string $password
-    )
-    {
+    ) {
     }
 }

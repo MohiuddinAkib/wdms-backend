@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Domain\Denomination;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class DenominationControllerTest extends TestCase

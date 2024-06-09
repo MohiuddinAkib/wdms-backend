@@ -24,7 +24,7 @@ return [
      * Projectors can be registered in this array or a service provider.
      */
     'projectors' => [
-        UsersProjector::class
+        UsersProjector::class,
     ],
 
     /*

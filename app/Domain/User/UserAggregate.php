@@ -4,8 +4,8 @@ namespace App\Domain\User;
 
 use App\Domain\Auth\Dto\RegisterUserData;
 use App\Domain\User\Events\UserRegistered;
-use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 use App\Domain\User\Exceptions\UserAlreadyRegisteredException;
+use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
 class UserAggregate extends AggregateRoot
 {
