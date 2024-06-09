@@ -1,8 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CurrencyController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DenominationController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -20,6 +21,7 @@ Route::middleware('guest')
     });
 
 Route::get('currencies', [CurrencyController::class, 'index'])->name('currency.index');
+Route::get('currencies/{currency}/Denominations', [DenominationController::class, 'index'])->name('denomination.index');
 
 Route::middleware('auth:sanctum')->group(function () {
 });

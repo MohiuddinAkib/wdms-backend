@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Currency\Resource;
+namespace App\Domain\Currency\Resources;
 
 use Spatie\LaravelData\Data;
 

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Domain\Contracts;
+namespace App\Domain\Currency\Contracts;
 
-use App\Domain\Currency\Resource\CurrencyData;
 use Illuminate\Support\Collection;
+use App\Domain\Currency\Resources\CurrencyData;
+use App\Domain\Currency\Resources\DenominationData;
 
 interface CurrencyRepository
 {
@@ -11,4 +12,9 @@ interface CurrencyRepository
      * @return Collection<CurrencyData>
      */
     public function getCurrencies(): Collection;
+
+    /**
+     * @return Collection<DenominationData>
+     */
+    public function getDenominations(string $currency): Collection;
 }

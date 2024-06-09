@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Contracts\CurrencyRepository;
+use App\Domain\Currency\Contracts\CurrencyRepository;
 use Illuminate\Http\JsonResponse;
 
 class CurrencyController extends Controller
