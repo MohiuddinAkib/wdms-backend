@@ -5,6 +5,8 @@ namespace App\Domain\Wallet\Dto;
 use App\Domain\Currency\Contracts\CurrencyRepository;
 use App\Domain\Wallet\Projections\Wallet;
 use Closure;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Data;
 
 class CreateWalletData extends Data
@@ -14,10 +16,8 @@ class CreateWalletData extends Data
     ) {
     }
 
-    public static function rules(): array
+    public static function rules(CurrencyRepository $repository): array
     {
-        $repository = app(CurrencyRepository::class);
-
         return [
             'currency' => [
                 'required',
@@ -26,16 +26,15 @@ class CreateWalletData extends Data
                         $fail('Currency not supported');
                     }
                 },
-                // WILL ALLOW TO HAVE MULTIPLE WALLETS BUT EACH WALLET WITH ONE UNIQUE CURRENCY
-                function (string $attribute, string $value, Closure $fail) {
-                    /** @var Wallet|null */
-                    $wallet = Wallet::where('currency', $value)->first();
-
-                    if (! is_null($wallet)) {
-                        $fail('Wallet already exists with the currency: '.$value);
-                    }
-                },
+                Rule::unique(Wallet::class)->where(fn(Builder $query) => $query->where('user_id', auth()->user()->uuid))
             ],
+        ];
+    }
+
+    public static function messages(...$args)
+    {
+        return [
+            'currency.unique' => 'Wallet already exists with the currency: :input'
         ];
     }
 }

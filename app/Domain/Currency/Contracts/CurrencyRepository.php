@@ -19,4 +19,6 @@ interface CurrencyRepository
     public function getDenominations(string $currency): Collection;
 
     public function isCurrencySupported(string $currency): bool;
+
+    public function isValidDenomination(string $currency, string $denomination, string $type): bool;
 }

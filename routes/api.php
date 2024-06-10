@@ -4,11 +4,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DenominationController;
 use App\Http\Controllers\WalletController;
+use App\Http\Controllers\WalletDenominationController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
 
 Route::middleware('guest')
     ->prefix('auth')
@@ -27,12 +28,21 @@ Route::get('currencies/{currency}/denominations', [DenominationController::class
 Route::middleware('auth:sanctum')->group(function () {
     Route::controller(WalletController::class)->group(function () {
         Route::post('wallets', 'store')->name('wallets.store');
+        Route::get('wallets', 'index')->name('wallets.index');
         Route::delete('wallets/{wallet}', 'destroy')
             ->name('wallets.destroy')
             ->can('delete-wallet', 'wallet');
-
         Route::get('wallets/{wallet}', 'show')
             ->name('wallets.show')
             ->can('show-wallet', 'wallet');
     });
+    
+    Route::controller(WalletDenominationController::class)
+        ->prefix('wallets/{wallet}')
+        ->name('wallet-denominations.')
+        ->group(function() {
+            Route::post('denominations', 'store')
+                ->name('store')
+                ->can('update-wallet', 'wallet');
+        });
 });

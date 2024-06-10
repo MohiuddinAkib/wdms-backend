@@ -4,8 +4,9 @@ namespace App\Domain\Wallet\Exceptions;
 
 use DomainException;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
-class WalletAlreadyCreatedException extends DomainException
+class WalletAlreadyExistsException extends DomainException
 {
     public function __construct(string $currency)
     {
@@ -17,6 +18,6 @@ class WalletAlreadyCreatedException extends DomainException
         return response()->json([
             'success' => false,
             'message' => $this->getMessage(),
-        ]);
+        ], Response::HTTP_BAD_REQUEST);
     }
 }

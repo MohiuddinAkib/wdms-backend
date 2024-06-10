@@ -2,12 +2,14 @@
 
 namespace App\Domain\Wallet\Projections;
 
+use App\Domain\Currency\Projections\Denomination;
 use App\Models\User;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\EventSourcing\Projections\Projection;
 
 class Wallet extends Projection
@@ -36,11 +38,17 @@ class Wallet extends Projection
             ->multipliedBy(BigDecimal::of($decimalPlaces))
             ->toScale($decimalPlacesValue, RoundingMode::DOWN);
 
-        $this->writeable()->increment('balance', $result);
+        // TODO: handle deposit increment
+        // $this->writeable()->increment('balance', $result);
     }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, ownerKey: 'uuid');
+    }
+
+    public function denominations(): HasMany
+    {
+        return $this->hasMany(Denomination::class, 'wallet_id');
     }
 }

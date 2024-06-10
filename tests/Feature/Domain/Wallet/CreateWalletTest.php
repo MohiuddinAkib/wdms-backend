@@ -6,7 +6,9 @@ use App\Domain\Wallet\Projections\Wallet;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Cache;
 use Laravel\Sanctum\Sanctum;
+use Mockery;
 use Tests\TestCase;
 
 class CreateWalletTest extends TestCase
@@ -59,8 +61,19 @@ class CreateWalletTest extends TestCase
 
     public function test_should_create_wallet_with_proper_data(): void
     {
+        $this->withoutExceptionHandling();
         $user = User::factory()->create();
         Sanctum::actingAs($user);
+        
+        $mockTaggable =  Mockery::mock(\Illuminate\Cache\TaggedCache::class);
+        Cache::shouldReceive('tags')
+            ->once()
+            ->with(['wallets', $user->getKey()])
+            ->andReturn($mockTaggable);
+        $mockTaggable->shouldReceive('flush')
+            ->once()
+            ->withNoArgs()
+            ->andReturnNull();
 
         config()->set('wallet', [
             'currencies' => [

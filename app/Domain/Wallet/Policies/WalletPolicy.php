@@ -11,7 +11,7 @@ class WalletPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Wallet $wallet): bool
+    public function update(User $user, Wallet $wallet): bool|Response
     {
         if ($wallet->user->isNot($user)) {
             return Response::denyAsNotFound();

@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Domain\Wallet\Projections\Wallet;
+use App\Domain\Currency\Projections\Denomination;
 use Faker\Generator;
 use Illuminate\Container\Container;
 
-class WalletFactory
+class DenominationFactory
 {
     private Generator $faker;
 
@@ -35,38 +35,39 @@ class WalletFactory
         $state = array_merge(
             [
                 'uuid' => $this->faker->uuid(),
-                'currency' => $this->faker->randomElement(['bdt', 'usd', 'inr']),
             ],
             $this->attributes,
             $extra
         );
 
-        return Wallet::new()->writeable()->create($state);
-    }
-
-    public function count(int $num)
-    {
-        return $this->new([], $num);
-    }
-
-    public function withUserUuid(string $userUuid): self
-    {
-        return $this->state([
-            'user_id' => $userUuid,
-        ]);
+        return Denomination::new()->writeable()->create($state);
     }
 
     public function withWalletUuid(string $walletUuid): self
     {
         return $this->state([
-            'uuid' => $walletUuid,
+            'wallet_id' => $walletUuid,
         ]);
     }
 
-    public function withCurrency(string $currency): self
+    public function withName(string $name): self
     {
         return $this->state([
-            'currency' => $currency,
+            'name' => $name,
+        ]);
+    }
+
+    public function withQuantity(int $qantity): self
+    {
+        return $this->state([
+            'quantity' => $qantity,
+        ]);
+    }
+
+    public function withType(string $type): self
+    {
+        return $this->state([
+            'type' => $type,
         ]);
     }
 }

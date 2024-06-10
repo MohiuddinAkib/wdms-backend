@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('denominations', function (Blueprint $table) {
-            $table->uuid('uuid')->primary();
-            $table->string('name');
-            $table->unsignedInteger('quantity')
-                ->default(0);
-            $table->string('type');
-            $table->timestamps();
+        Schema::table('denominations', function (Blueprint $table) {
+            $table->foreignUuid('wallet_id')->constrained('wallets', 'uuid');
+
+            $table->unique(['wallet_id', 'name']);
         });
     }
 
@@ -26,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('denominations');
+        Schema::table('denominations', function (Blueprint $table) {
+            $table->dropForeign('wallet_id');
+        });
     }
 };

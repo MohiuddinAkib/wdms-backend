@@ -4,11 +4,13 @@ namespace Tests\Feature\Domain\Wallet;
 
 use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
 use App\Models\User;
+use Cache;
 use Database\Factories\WalletFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Exceptions;
 use Laravel\Sanctum\Sanctum;
+use Mockery;
 use Tests\TestCase;
 
 class DeleteWalletTest extends TestCase
@@ -19,7 +21,7 @@ class DeleteWalletTest extends TestCase
     {
         $user = User::factory()->create();
         $wallet = WalletFactory::new()->withUserUuid($user->uuid)->create();
-        $response = $this->deleteJson(route('wallet.destroy', $wallet->getKey()));
+        $response = $this->deleteJson(route('wallets.destroy', $wallet->getKey()));
 
         $response->assertUnauthorized();
     }
@@ -32,7 +34,7 @@ class DeleteWalletTest extends TestCase
         $ownerUser = User::factory()->create();
         $wallet = WalletFactory::new()->withUserUuid($ownerUser->uuid)->create();
 
-        $response = $this->deleteJson(route('wallet.destroy', $wallet->getKey()));
+        $response = $this->deleteJson(route('wallets.destroy', $wallet->getKey()));
         $response->assertNotFound();
     }
 
@@ -41,11 +43,11 @@ class DeleteWalletTest extends TestCase
         Exceptions::fake();
         $user = User::factory()->create();
         $wallet = WalletFactory::new()->withUserUuid($user->uuid)->create([
-            'balance' => $this->faker->randomNumber(nbDigits: 2),
+            'balance' => 11,
         ]);
         Sanctum::actingAs($user);
 
-        $response = $this->deleteJson(route('wallet.destroy', $wallet->getKey()));
+        $response = $this->deleteJson(route('wallets.destroy', $wallet->getKey()));
         $response->assertBadRequest()
             ->assertJson([
                 'success' => false,
@@ -61,7 +63,17 @@ class DeleteWalletTest extends TestCase
         $wallet = WalletFactory::new()->withUserUuid($user->uuid)->create();
         Sanctum::actingAs($user);
 
-        $response = $this->deleteJson(route('wallet.destroy', $wallet->getKey()));
+        $mockTaggable =  Mockery::mock(\Illuminate\Cache\TaggedCache::class);
+        Cache::shouldReceive('tags')
+            ->once()
+            ->with(['wallets', $user->getKey()])
+            ->andReturn($mockTaggable);
+        $mockTaggable->shouldReceive('flush')
+            ->once()
+            ->with()
+            ->andReturnNull();
+
+        $response = $this->deleteJson(route('wallets.destroy', $wallet->getKey()));
 
         $response
             ->assertOk()

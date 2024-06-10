@@ -2,10 +2,13 @@
 
 namespace App\Domain\Wallet;
 
+use App\Domain\Wallet\Dto\AddWalletDenominationData;
 use App\Domain\Wallet\Events\WalletCreated;
 use App\Domain\Wallet\Events\WalletDeleted;
-use App\Domain\Wallet\Exceptions\WalletAlreadyCreatedException;
+use App\Domain\Wallet\Events\WalletDenominationAdded;
+use App\Domain\Wallet\Exceptions\WalletAlreadyExistsException;
 use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
+use App\Domain\Wallet\Exceptions\WalletDenominationAlreadyExistsException;
 use Brick\Math\BigDecimal;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
@@ -15,9 +18,19 @@ class WalletAggregate extends AggregateRoot
 
     private string $balance = '0';
 
+    /**
+     * @var array<int, string>
+     */
+    private array $coins = [];
+
+    /**
+     * @var array<int, string>
+     */
+    private array $bills = [];
+
     public function createWallet(string $userId, string $currency): self
     {
-        throw_if($this->created, WalletAlreadyCreatedException::class, $currency);
+        throw_if($this->created, WalletAlreadyExistsException::class, $currency);
 
         $this->recordThat(new WalletCreated(
             walletId: $this->uuid(),
@@ -44,5 +57,39 @@ class WalletAggregate extends AggregateRoot
         ));
 
         return $this;
+    }
+
+    public function addDenomination(string $denominationId, AddWalletDenominationData $denominationData): self
+    {
+        // CHECKING IF THE DENOMINATION IS ALREADY ADDED TO THIS WALLET
+        throw_if(
+            ($denominationData->type === "coin" 
+                && array_key_exists($denominationData->type, $this->coins))
+            || ($denominationData->type === "bill" 
+                && array_key_exists($denominationData->type, $this->bills)),
+            WalletDenominationAlreadyExistsException::class,
+            $denominationData->name,
+            $denominationData->type
+        );
+
+        $this->recordThat(new WalletDenominationAdded(
+            walletId: $this->uuid(),
+            denominationId: $denominationId,
+            name: $denominationData->name,
+            type: $denominationData->type
+        ));
+
+        return $this;
+    }
+
+    protected function applyWalletDenominationAdded(WalletDenominationAdded $event): void
+    {
+        if($event->type === 'coin') {
+            $this->coins[] = $event->name;
+        }
+
+        if ($event->type === 'bill') {
+            $this->bills[] = $event->name;
+        }
     }
 }

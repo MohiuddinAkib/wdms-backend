@@ -8,9 +8,13 @@ use App\Domain\Wallet\Projections\Wallet;
 use App\Domain\Wallet\Resources\CreateWalletResponseResource;
 use App\Domain\Wallet\Resources\DeleteWalletResponseResource;
 use App\Domain\Wallet\Resources\WalletDetailsResponseResource;
+use App\Domain\Wallet\Resources\WalletListResponseResource;
 use App\Domain\Wallet\Resources\WalletResource;
 use App\Domain\Wallet\WalletAggregate;
+use App\Models\User;
 use Brick\Math\BigDecimal;
+use Cache;
+use Illuminate\Http\Request;
 use Str;
 
 class WalletController extends Controller
@@ -18,9 +22,22 @@ class WalletController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request): WalletListResponseResource
     {
-        //
+        /**
+         * @var User
+         */
+        $user = $request->user();
+        // CACHE WITH TAG TO LATER MODIFY WHILE MUTATING THE DATA
+        return Cache::tags(['wallets', auth()->id()])
+            ->remember(
+                'wallet-list', 
+                now()->addMinutes(5),
+                fn() => new WalletListResponseResource(
+                    true,
+                    WalletResource::collect($user->wallets)->all()
+                )
+            );
     }
 
     /**
@@ -45,6 +62,9 @@ class WalletController extends Controller
         }
 
         $createdWalletResource = WalletResource::from($createdWallet);
+        
+        // Invalidate wallet cache due to mutation
+        Cache::tags(['wallets', auth()->id()])->flush();
 
         return new CreateWalletResponseResource(
             success: true,
@@ -55,10 +75,15 @@ class WalletController extends Controller
 
     public function show(Wallet $wallet): WalletDetailsResponseResource
     {
-        return new WalletDetailsResponseResource(
-            true,
-            WalletResource::from($wallet)
-        );
+        return Cache::tags(['wallets', auth()->id()])
+            ->remember(
+                'wallet-details-' . $wallet->getKey(),
+                now()->addMinutes(5),
+                fn() => new WalletDetailsResponseResource(
+                    true,
+                    WalletResource::from($wallet)
+                )
+            );
     }
 
     /**
@@ -73,9 +98,13 @@ class WalletController extends Controller
             ->deleteWallet()
             ->persist();
 
+        // Invalidate wallet cache due to mutation
+        Cache::tags(['wallets', auth()->id()])->flush();
+
         return new DeleteWalletResponseResource(
             true,
             'Wallet deleted successfully.'
         );
     }
 }
+
