@@ -44,5 +44,9 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('denominations', 'store')
                 ->name('store')
                 ->can('update-wallet', 'wallet');
+            
+            Route::delete('denominations/{denomination}', 'destroy')
+                ->name('destroy')
+                ->can('remove-wallet-denomination', 'wallet,denomination');
         });
 });

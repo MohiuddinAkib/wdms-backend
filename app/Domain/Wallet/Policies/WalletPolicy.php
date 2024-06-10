@@ -2,6 +2,7 @@
 
 namespace App\Domain\Wallet\Policies;
 
+use App\Domain\Currency\Projections\Denomination;
 use App\Domain\Wallet\Projections\Wallet;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -36,6 +37,19 @@ class WalletPolicy
     {
         if ($wallet->user->isNot($user)) {
             return Response::denyAsNotFound();
+        }
+
+        return true;
+    }
+
+    public function removeDenomination(User $user, Wallet $wallet, Denomination $denomination): bool|Response
+    {
+        if ($wallet->user->isNot($user) || $denomination->wallet->isNot($wallet)) {
+            return Response::denyAsNotFound();
+        }
+
+        if($denomination->quantity > 0) {
+            return Response::deny("The denomination balance is not empty.");
         }
 
         return true;

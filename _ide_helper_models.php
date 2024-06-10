@@ -18,6 +18,7 @@ namespace App\Domain\Currency\Projections{
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Domain\Wallet\Projections\Wallet|null $wallet
  * @method static \Illuminate\Database\Eloquent\Builder|Denomination newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Denomination newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Denomination query()
@@ -33,6 +34,8 @@ namespace App\Domain\Wallet\Projections{
  * 
  *
  * @property-read mixed $balance
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domain\Currency\Projections\Denomination> $denominations
+ * @property-read int|null $denominations_count
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet newQuery()
@@ -74,6 +77,8 @@ namespace App\Models{
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domain\Wallet\Projections\Wallet> $wallets
+ * @property-read int|null $wallets_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()

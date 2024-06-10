@@ -3,7 +3,7 @@
 namespace App\Domain\Wallet\Exceptions;
 
 use App\Domain\Wallet\Resources\DeleteWalletResponseResource;
-use App\Support\DomainException;
+use DomainException;
 
 class WalletBalanceNotEmptyException extends DomainException
 {

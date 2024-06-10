@@ -6,6 +6,7 @@ use App\Domain\Currency\Projections\Denomination;
 use App\Domain\Wallet\Events\WalletCreated;
 use App\Domain\Wallet\Events\WalletDeleted;
 use App\Domain\Wallet\Events\WalletDenominationAdded;
+use App\Domain\Wallet\Events\WalletDenominationRemoved;
 use App\Domain\Wallet\Projections\Wallet;
 use App\Models\User;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
@@ -34,5 +35,10 @@ class WalletsProjector extends Projector
             'type' => $event->type,
             'wallet_id' => $event->walletId
         ]);
+    }
+
+    public function onWalletDenominationRemoved(WalletDenominationRemoved $event): void
+    {
+        Denomination::find($event->denominationId)?->writeable()->delete();
     }
 }

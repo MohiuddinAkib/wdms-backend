@@ -35,5 +35,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('delete-wallet', [WalletPolicy::class, 'delete']);
         Gate::define('update-wallet', [WalletPolicy::class, 'update']);
         Gate::define('show-wallet', [WalletPolicy::class, 'show']);
+        Gate::define('remove-wallet-denomination', [WalletPolicy::class, 'removeDenomination']);
     }
 }

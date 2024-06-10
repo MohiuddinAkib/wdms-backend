@@ -3,12 +3,17 @@
 namespace App\Domain\Wallet;
 
 use App\Domain\Wallet\Dto\AddWalletDenominationData;
+use App\Domain\Wallet\Dto\RemoveWalletDenominationData;
 use App\Domain\Wallet\Events\WalletCreated;
 use App\Domain\Wallet\Events\WalletDeleted;
 use App\Domain\Wallet\Events\WalletDenominationAdded;
+use App\Domain\Wallet\Events\WalletDenominationRemoved;
+use App\Domain\Wallet\Exceptions\UnknownDenominationException;
 use App\Domain\Wallet\Exceptions\WalletAlreadyExistsException;
 use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
 use App\Domain\Wallet\Exceptions\WalletDenominationAlreadyExistsException;
+use App\Domain\Wallet\Exceptions\WalletDenominationBalanceExistsException;
+use Arr;
 use Brick\Math\BigDecimal;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
@@ -27,6 +32,11 @@ class WalletAggregate extends AggregateRoot
      * @var array<int, string>
      */
     private array $bills = [];
+
+    /**
+     * @var array<int, string>
+     */
+    private array $denominationIds = [];
 
     public function createWallet(string $userId, string $currency): self
     {
@@ -64,9 +74,9 @@ class WalletAggregate extends AggregateRoot
         // CHECKING IF THE DENOMINATION IS ALREADY ADDED TO THIS WALLET
         throw_if(
             ($denominationData->type === "coin" 
-                && array_key_exists($denominationData->type, $this->coins))
+                && array_key_exists($denominationData->name, $this->coins))
             || ($denominationData->type === "bill" 
-                && array_key_exists($denominationData->type, $this->bills)),
+                && array_key_exists($denominationData->name, $this->bills)),
             WalletDenominationAlreadyExistsException::class,
             $denominationData->name,
             $denominationData->type
@@ -91,5 +101,20 @@ class WalletAggregate extends AggregateRoot
         if ($event->type === 'bill') {
             $this->bills[] = $event->name;
         }
+
+        $this->denominationIds[] = $event->denominationId;
+    }
+
+    public function removeDenomination(RemoveWalletDenominationData $data,): self
+    {
+        throw_unless(in_array($data->denominationId, $this->denominationIds), UnknownDenominationException::class);
+
+        throw_if($data->quantity > 0, WalletDenominationBalanceExistsException::class);
+
+        $this->recordThat(new WalletDenominationRemoved(
+            denominationId: $data->denominationId
+        ));
+
+        return $this;
     }
 }
