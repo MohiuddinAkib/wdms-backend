@@ -40,8 +40,8 @@ class AddDenominationToWalletTest extends TestCase
                             'value' => 2,
                         ],
                     ],
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 
@@ -64,7 +64,7 @@ class AddDenominationToWalletTest extends TestCase
 
         $owner = User::factory()->create();
         $wallet = WalletFactory::new()->withUserUuid($owner->uuid)->create();
-        
+
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
 
         ]);
@@ -77,15 +77,15 @@ class AddDenominationToWalletTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
         $wallet = WalletFactory::new()->withUserUuid($user->uuid)->create();
-        
+
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
-            
+
         ]);
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors([
                 'name',
-                'type'
+                'type',
             ]);
     }
 
@@ -101,7 +101,7 @@ class AddDenominationToWalletTest extends TestCase
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
             'name' => '5 Taka',
             'type' => 'safasdf',
-        ]); 
+        ]);
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors([
@@ -119,18 +119,17 @@ class AddDenominationToWalletTest extends TestCase
             ->create();
 
         $this->createWalletConfig();
-        
+
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
             'name' => '5 Taka',
             'type' => 'coin',
-        ]); 
+        ]);
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors([
                 'name' => 'Invalid denomination 5 Taka for currency bdt.',
             ]);
     }
-
 
     public function test_should_add_unique_denomination_to_wallet(): void
     {
@@ -149,15 +148,14 @@ class AddDenominationToWalletTest extends TestCase
 
         $this->createWalletConfig();
 
-        
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
             'name' => '5 Poisha',
             'type' => 'coin',
-        ]); 
+        ]);
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors([
-                'name' => 'The denomination has already been taken.'
+                'name' => 'The denomination has already been taken.',
             ]);
     }
 
@@ -178,15 +176,15 @@ class AddDenominationToWalletTest extends TestCase
             ->with(['wallets', $user->getKey()])
             ->once()
             ->andReturn($mockTaggable);
-            $mockTaggable->shouldReceive('flush')
-                ->withNoArgs()
-                ->once()
-                ->andReturnNull();
-        
+        $mockTaggable->shouldReceive('flush')
+            ->withNoArgs()
+            ->once()
+            ->andReturnNull();
+
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
             'name' => '5 Poisha',
             'type' => 'coin',
-        ]); 
+        ]);
 
         $response->assertCreated()
             ->assertJson([
@@ -197,15 +195,15 @@ class AddDenominationToWalletTest extends TestCase
                     'denominations' => [
                         [
                             'name' => '5 Poisha',
-                            'type' => 'coin'
-                        ]
-                    ]
-                ]
+                            'type' => 'coin',
+                        ],
+                    ],
+                ],
             ]);
-        
+
         $this->assertDatabaseHas(Denomination::getModel()->getTable(), [
             'name' => '5 Poisha',
-            'type' => 'coin'
+            'type' => 'coin',
         ]);
     }
 }

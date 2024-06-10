@@ -64,8 +64,8 @@ class CreateWalletTest extends TestCase
         $this->withoutExceptionHandling();
         $user = User::factory()->create();
         Sanctum::actingAs($user);
-        
-        $mockTaggable =  Mockery::mock(\Illuminate\Cache\TaggedCache::class);
+
+        $mockTaggable = Mockery::mock(\Illuminate\Cache\TaggedCache::class);
         Cache::shouldReceive('tags')
             ->once()
             ->with(['wallets', $user->getKey()])

@@ -8,7 +8,6 @@ class WalletDenominationRemoved extends ShouldBeStored
 {
     public function __construct(
         public string $denominationId
-    )
-    {
+    ) {
     }
 }

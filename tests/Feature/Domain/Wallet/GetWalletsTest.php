@@ -3,7 +3,6 @@
 namespace Tests\Feature\Domain\Wallet;
 
 use App\Models\User;
-use Cache;
 use Database\Factories\WalletFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -12,7 +11,7 @@ use Tests\TestCase;
 
 class GetWalletsTest extends TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     public function test_should_be_authenticated_to_be_able_to_see_wallet_list(): void
     {
@@ -20,7 +19,7 @@ class GetWalletsTest extends TestCase
 
         $response->assertUnauthorized();
     }
-    
+
     public function test_should_be_able_to_see_owning_wallet_list(): void
     {
         $this->withoutExceptionHandling();
@@ -32,7 +31,7 @@ class GetWalletsTest extends TestCase
 
         $anotherUser = User::factory()->create();
         $wallet3 = WalletFactory::new()->withUserUuid($anotherUser->uuid)->withCurrency('usd')->create();
-        
+
         $response = $this->getJson(route('wallets.index'));
 
         $response->assertOk()
@@ -41,19 +40,18 @@ class GetWalletsTest extends TestCase
                 'data' => [
                     [
                         'id' => $wallet1->getKey(),
-                        'currency' => 'bdt'
+                        'currency' => 'bdt',
                     ],
                     [
                         'id' => $wallet2->getKey(),
-                        'currency' => 'inr'
-                    ]
-                ]
+                        'currency' => 'inr',
+                    ],
+                ],
             ]);
-
 
         $response->assertJsonMissing([
             'id' => $wallet3->getKey(),
-            'currency' => 'usd'
+            'currency' => 'usd',
         ]);
     }
 }

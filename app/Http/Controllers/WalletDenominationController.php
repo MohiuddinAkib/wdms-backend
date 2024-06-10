@@ -18,7 +18,7 @@ class WalletDenominationController extends Controller
 {
     public function store(Wallet $wallet, AddWalletDenominationData $data): AddWalletDenominationResponseResource
     {
-        $denominationId = (string)Str::uuid();
+        $denominationId = (string) Str::uuid();
         WalletAggregate::retrieve($wallet->getKey())
             ->addDenomination($denominationId, $data)
             ->persist();
@@ -48,13 +48,13 @@ class WalletDenominationController extends Controller
                 )
             )
             ->persist();
-            
+
         // Invalidate wallet cache due to mutation
         Cache::tags(['wallets', auth()->id()])->flush();
 
         return new DeleteWalletDenominationResponseResource(
             true,
-            "Denomination removed successfully"
+            'Denomination removed successfully'
         );
     }
 }

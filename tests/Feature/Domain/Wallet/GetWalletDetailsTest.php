@@ -44,7 +44,7 @@ class GetWalletDetailsTest extends TestCase
         $user = User::factory()->create();
         /** @var Wallet */
         $wallet = WalletFactory::new()->withUserUuid($user->uuid)->create();
-        
+
         $denomination1 = DenominationFactory::new()
             ->withWalletUuid($wallet->getKey())
             ->withName('1 Poisha')
@@ -61,7 +61,6 @@ class GetWalletDetailsTest extends TestCase
 
         Sanctum::actingAs($user);
         $response = $this->getJson(route('wallets.show', $wallet->getKey()));
-
 
         $response->assertOk()
             ->assertJson([
@@ -82,8 +81,8 @@ class GetWalletDetailsTest extends TestCase
                             'name' => $denomination2->name,
                             'type' => $denomination2->type,
                             'quantity' => $denomination2->quantity,
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
             ]);
     }

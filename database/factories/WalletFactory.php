@@ -12,8 +12,7 @@ class WalletFactory
 
     public function __construct(
         private readonly array $attributes = []
-    )
-    {
+    ) {
         $this->faker = Container::getInstance()->make(Generator::class);
     }
 

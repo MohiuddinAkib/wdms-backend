@@ -5,7 +5,6 @@ namespace App\Domain\Currency\Repositories;
 use App\Domain\Currency\Contracts\CurrencyRepository as ContractsCurrencyRepository;
 use App\Domain\Currency\Resources\CurrencyResource;
 use App\Domain\Currency\Resources\DenominationResource;
-use Arr;
 use Illuminate\Support\Collection;
 
 class CurrencyRepository implements ContractsCurrencyRepository
@@ -49,21 +48,21 @@ class CurrencyRepository implements ContractsCurrencyRepository
     {
         return config()->has("wallet.currencies.{$currency}");
     }
-    
+
     public function isValidDenomination(string $currency, string $denomination, string $type): bool
     {
-        if(!$this->isCurrencySupported($currency)) {
+        if (! $this->isCurrencySupported($currency)) {
             return false;
         }
 
         $denominaions = config("wallet.currencies.{$currency}.{$type}s");
 
-        if(is_null($denominaions)) {
+        if (is_null($denominaions)) {
             return false;
         }
 
-        foreach($denominaions as $eachDenomination) {
-            if(data_get($eachDenomination, 'name') === $denomination) {
+        foreach ($denominaions as $eachDenomination) {
+            if (data_get($eachDenomination, 'name') === $denomination) {
                 return true;
             }
         }

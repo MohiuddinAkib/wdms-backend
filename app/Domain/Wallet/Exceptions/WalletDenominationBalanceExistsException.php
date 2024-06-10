@@ -11,7 +11,7 @@ class WalletDenominationBalanceExistsException extends DomainException
 {
     public function __construct()
     {
-        parent::__construct("The denomination balance is not empty.");
+        parent::__construct('The denomination balance is not empty.');
     }
 
     /**

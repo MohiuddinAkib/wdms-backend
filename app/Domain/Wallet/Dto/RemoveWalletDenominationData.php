@@ -7,9 +7,10 @@ use Spatie\LaravelData\Data;
 class RemoveWalletDenominationData extends Data
 {
     public function __construct(
-      public readonly string $denominationId, 
-      public readonly string $type, 
-      public readonly string $name,
-      public readonly int $quantity,
-    ) {}
+        public readonly string $denominationId,
+        public readonly string $type,
+        public readonly string $name,
+        public readonly int $quantity,
+    ) {
+    }
 }

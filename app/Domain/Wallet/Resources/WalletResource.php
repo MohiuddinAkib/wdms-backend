@@ -10,7 +10,7 @@ use Spatie\LaravelData\Resource;
 #[MapOutputName(SnakeCaseMapper::class)]
 class WalletResource extends Resource
 {
-    /** @param array<int, WalletDenominationResource> $denominations */ 
+    /** @param array<int, WalletDenominationResource> $denominations */
     public function __construct(
         public string $id,
         public string $currency,

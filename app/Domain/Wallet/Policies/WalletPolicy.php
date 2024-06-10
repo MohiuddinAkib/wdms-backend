@@ -48,8 +48,8 @@ class WalletPolicy
             return Response::denyAsNotFound();
         }
 
-        if($denomination->quantity > 0) {
-            return Response::deny("The denomination balance is not empty.");
+        if ($denomination->quantity > 0) {
+            return Response::deny('The denomination balance is not empty.');
         }
 
         return true;

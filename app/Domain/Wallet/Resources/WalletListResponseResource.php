@@ -2,17 +2,16 @@
 
 namespace App\Domain\Wallet\Resources;
 
-use Spatie\LaravelData\DataCollection;
 use Spatie\LaravelData\Resource;
 
 class WalletListResponseResource extends Resource
 {
-    
     /**
-     * @param array<int, WalletResource> $data
+     * @param  array<int, WalletResource>  $data
      */
     public function __construct(
-      public bool $success,
-      public array $data
-    ) {}
+        public bool $success,
+        public array $data
+    ) {
+    }
 }

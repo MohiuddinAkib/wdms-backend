@@ -28,12 +28,13 @@ class WalletController extends Controller
          * @var User
          */
         $user = $request->user();
+
         // CACHE WITH TAG TO LATER MODIFY WHILE MUTATING THE DATA
         return Cache::tags(['wallets', auth()->id()])
             ->remember(
-                'wallet-list', 
+                'wallet-list',
                 now()->addMinutes(5),
-                fn() => new WalletListResponseResource(
+                fn () => new WalletListResponseResource(
                     true,
                     WalletResource::collect($user->wallets)->all()
                 )
@@ -62,7 +63,7 @@ class WalletController extends Controller
         }
 
         $createdWalletResource = WalletResource::from($createdWallet);
-        
+
         // Invalidate wallet cache due to mutation
         Cache::tags(['wallets', auth()->id()])->flush();
 
@@ -77,9 +78,9 @@ class WalletController extends Controller
     {
         return Cache::tags(['wallets', auth()->id()])
             ->remember(
-                'wallet-details-' . $wallet->getKey(),
+                'wallet-details-'.$wallet->getKey(),
                 now()->addMinutes(5),
-                fn() => new WalletDetailsResponseResource(
+                fn () => new WalletDetailsResponseResource(
                     true,
                     WalletResource::from($wallet)
                 )
@@ -107,4 +108,3 @@ class WalletController extends Controller
         );
     }
 }
-

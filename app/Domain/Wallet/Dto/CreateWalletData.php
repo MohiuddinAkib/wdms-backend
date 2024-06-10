@@ -26,7 +26,7 @@ class CreateWalletData extends Data
                         $fail('Currency not supported');
                     }
                 },
-                Rule::unique(Wallet::class)->where(fn(Builder $query) => $query->where('user_id', auth()->user()->uuid))
+                Rule::unique(Wallet::class)->where(fn (Builder $query) => $query->where('user_id', auth()->user()->uuid)),
             ],
         ];
     }
@@ -34,7 +34,7 @@ class CreateWalletData extends Data
     public static function messages(...$args)
     {
         return [
-            'currency.unique' => 'Wallet already exists with the currency: :input'
+            'currency.unique' => 'Wallet already exists with the currency: :input',
         ];
     }
 }

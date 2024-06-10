@@ -63,7 +63,7 @@ class DeleteWalletTest extends TestCase
         $wallet = WalletFactory::new()->withUserUuid($user->uuid)->create();
         Sanctum::actingAs($user);
 
-        $mockTaggable =  Mockery::mock(\Illuminate\Cache\TaggedCache::class);
+        $mockTaggable = Mockery::mock(\Illuminate\Cache\TaggedCache::class);
         Cache::shouldReceive('tags')
             ->once()
             ->with(['wallets', $user->getKey()])

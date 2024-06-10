@@ -16,7 +16,7 @@ class WalletDenominationResource extends Resource
         public string $type,
         public int $quantity
     ) {
-        
+
     }
 
     public static function fromModel(Denomination $denomination): self

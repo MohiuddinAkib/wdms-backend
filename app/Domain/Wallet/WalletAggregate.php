@@ -13,7 +13,6 @@ use App\Domain\Wallet\Exceptions\WalletAlreadyExistsException;
 use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
 use App\Domain\Wallet\Exceptions\WalletDenominationAlreadyExistsException;
 use App\Domain\Wallet\Exceptions\WalletDenominationBalanceExistsException;
-use Arr;
 use Brick\Math\BigDecimal;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
@@ -73,9 +72,9 @@ class WalletAggregate extends AggregateRoot
     {
         // CHECKING IF THE DENOMINATION IS ALREADY ADDED TO THIS WALLET
         throw_if(
-            ($denominationData->type === "coin" 
+            ($denominationData->type === 'coin'
                 && array_key_exists($denominationData->name, $this->coins))
-            || ($denominationData->type === "bill" 
+            || ($denominationData->type === 'bill'
                 && array_key_exists($denominationData->name, $this->bills)),
             WalletDenominationAlreadyExistsException::class,
             $denominationData->name,
@@ -94,7 +93,7 @@ class WalletAggregate extends AggregateRoot
 
     protected function applyWalletDenominationAdded(WalletDenominationAdded $event): void
     {
-        if($event->type === 'coin') {
+        if ($event->type === 'coin') {
             $this->coins[] = $event->name;
         }
 
@@ -105,7 +104,7 @@ class WalletAggregate extends AggregateRoot
         $this->denominationIds[] = $event->denominationId;
     }
 
-    public function removeDenomination(RemoveWalletDenominationData $data,): self
+    public function removeDenomination(RemoveWalletDenominationData $data): self
     {
         throw_unless(in_array($data->denominationId, $this->denominationIds), UnknownDenominationException::class);
 

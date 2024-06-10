@@ -3,9 +3,9 @@
 namespace App\Domain\Wallet\Exceptions;
 
 use DomainException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
 
 class UnknownDenominationException extends DomainException
 {

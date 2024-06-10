@@ -36,15 +36,15 @@ Route::middleware('auth:sanctum')->group(function () {
             ->name('wallets.show')
             ->can('show-wallet', 'wallet');
     });
-    
+
     Route::controller(WalletDenominationController::class)
         ->prefix('wallets/{wallet}')
         ->name('wallet-denominations.')
-        ->group(function() {
+        ->group(function () {
             Route::post('denominations', 'store')
                 ->name('store')
                 ->can('update-wallet', 'wallet');
-            
+
             Route::delete('denominations/{denomination}', 'destroy')
                 ->name('destroy')
                 ->can('remove-wallet-denomination', 'wallet,denomination');

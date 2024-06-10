@@ -33,7 +33,7 @@ class WalletsProjector extends Projector
             'uuid' => $event->denominationId,
             'name' => $event->name,
             'type' => $event->type,
-            'wallet_id' => $event->walletId
+            'wallet_id' => $event->walletId,
         ]);
     }
 

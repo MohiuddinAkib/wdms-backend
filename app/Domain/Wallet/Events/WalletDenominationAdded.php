@@ -11,7 +11,6 @@ class WalletDenominationAdded extends ShouldBeStored
         public string $denominationId,
         public string $name,
         public string $type
-    )
-    {
+    ) {
     }
 }

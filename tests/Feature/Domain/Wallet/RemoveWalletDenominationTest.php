@@ -27,8 +27,8 @@ class RemoveWalletDenominationTest extends TestCase
         $wallet = WalletFactory::new()->withCurrency(
             'bdt'
         )
-        ->withUserUuid($user->uuid)
-        ->create();
+            ->withUserUuid($user->uuid)
+            ->create();
         $denomination = DenominationFactory::new()
             ->withName($this->faker->name())
             ->withType('coin')
@@ -49,8 +49,8 @@ class RemoveWalletDenominationTest extends TestCase
         $wallet = WalletFactory::new()->withCurrency(
             'bdt'
         )
-        ->withUserUuid($user2->uuid)
-        ->create();
+            ->withUserUuid($user2->uuid)
+            ->create();
 
         $denomination = DenominationFactory::new()
             ->withName($this->faker->name())
@@ -70,8 +70,8 @@ class RemoveWalletDenominationTest extends TestCase
         $wallet = WalletFactory::new()->withCurrency(
             'bdt'
         )
-        ->withUserUuid($user->uuid)
-        ->create();
+            ->withUserUuid($user->uuid)
+            ->create();
         DenominationFactory::new()
             ->withName($this->faker->name())
             ->withType('coin')
@@ -84,8 +84,8 @@ class RemoveWalletDenominationTest extends TestCase
         $wallet2 = WalletFactory::new()->withCurrency(
             'bdt'
         )
-        ->withUserUuid($user2->uuid)
-        ->create();
+            ->withUserUuid($user2->uuid)
+            ->create();
         $denomination = DenominationFactory::new()
             ->withName($this->faker->name())
             ->withType('bill')
@@ -105,9 +105,9 @@ class RemoveWalletDenominationTest extends TestCase
         $wallet = WalletFactory::new()->withCurrency(
             'bdt'
         )
-        ->withUserUuid($user->uuid)
-        ->create();
-        
+            ->withUserUuid($user->uuid)
+            ->create();
+
         $denomination = DenominationFactory::new()
             ->withName($this->faker->name())
             ->withType('coin')
@@ -120,9 +120,9 @@ class RemoveWalletDenominationTest extends TestCase
         $response
             ->assertForbidden()
             ->assertJson([
-                'message' => 'The denomination balance is not empty.'
+                'message' => 'The denomination balance is not empty.',
             ]);
-        
+
         $this->assertModelExists($denomination);
     }
 
@@ -134,20 +134,20 @@ class RemoveWalletDenominationTest extends TestCase
         $wallet = WalletFactory::new()->withCurrency(
             'bdt'
         )
-        ->withUserUuid($user->uuid)
-        ->create();
+            ->withUserUuid($user->uuid)
+            ->create();
 
         $denominationId = (string) Str::uuid();
-        
+
         WalletAggregate::retrieve($wallet->getKey())
-        ->addDenomination(
-            $denominationId, 
-            new AddWalletDenominationData(
-                '5 Poisha',
-                'coin'
+            ->addDenomination(
+                $denominationId,
+                new AddWalletDenominationData(
+                    '5 Poisha',
+                    'coin'
+                )
             )
-        )
-        ->persist();
+            ->persist();
 
         $mockTaggable = Mockery::mock(TaggableStore::class);
         Cache::shouldReceive('tags')
@@ -158,20 +158,20 @@ class RemoveWalletDenominationTest extends TestCase
             ->withNoArgs()
             ->once()
             ->andReturnNull();
-        
+
         $response = $this->deleteJson(route('wallet-denominations.destroy', [$wallet->getKey(), $denominationId]));
 
         $response
             ->assertOk()
             ->assertJson([
                 'success' => true,
-                'message' => 'Denomination removed successfully'
+                'message' => 'Denomination removed successfully',
             ]);
-        
+
         $this->assertDatabaseMissing(Denomination::getModel()->getTable(), [
             'uuid' => $denominationId,
             'name' => '5 Poisha',
-             'type' => 'coin'
+            'type' => 'coin',
         ]);
     }
 }
