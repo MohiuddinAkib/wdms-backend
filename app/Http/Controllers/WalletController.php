@@ -28,8 +28,8 @@ class WalletController extends Controller
      */
     public function store(CreateWalletData $data): CreateWalletResponseResource
     {
-        $walletId = (string)Str::uuid();
-        
+        $walletId = (string) Str::uuid();
+
         WalletAggregate::retrieve($walletId)
             ->createWallet(auth()->user()->uuid, $data->currency)
             ->persist();
@@ -68,14 +68,14 @@ class WalletController extends Controller
     {
         // WILL NOT ALLOW TO DELETE WALLET WITH BALANCE
         throw_if(BigDecimal::of($wallet->balance)->compareTo(0) > 0, WalletBalanceNotEmptyException::class);
-        
+
         WalletAggregate::retrieve($wallet->getKey())
             ->deleteWallet()
             ->persist();
-            
+
         return new DeleteWalletResponseResource(
             true,
-            "Wallet deleted successfully."
+            'Wallet deleted successfully.'
         );
     }
 }

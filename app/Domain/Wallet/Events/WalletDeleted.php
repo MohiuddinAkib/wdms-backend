@@ -8,7 +8,6 @@ class WalletDeleted extends ShouldBeStored
 {
     public function __construct(
         public string $walletId
-    )
-    {
+    ) {
     }
 }

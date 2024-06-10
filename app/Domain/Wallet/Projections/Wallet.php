@@ -5,10 +5,10 @@ namespace App\Domain\Wallet\Projections;
 use App\Models\User;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
-use Spatie\EventSourcing\Projections\Projection;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\EventSourcing\Projections\Projection;
 
 class Wallet extends Projection
 {
@@ -27,7 +27,7 @@ class Wallet extends Projection
     public function deposit(float|int|string $amount)
     {
         $decimalPlacesValue = $this->decimal_places;
-        
+
         $decimalPlaces = BigDecimal::of(10)
             ->power($decimalPlacesValue)
             ->toScale(64, RoundingMode::DOWN);

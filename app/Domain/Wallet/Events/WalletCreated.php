@@ -10,7 +10,6 @@ class WalletCreated extends ShouldBeStored
         public string $walletId,
         public string $userId,
         public string $currency
-    )
-    {
+    ) {
     }
 }

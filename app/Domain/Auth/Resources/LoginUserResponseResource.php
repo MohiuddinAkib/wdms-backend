@@ -9,13 +9,14 @@ use Symfony\Component\HttpFoundation\Response;
 class LoginUserResponseResource extends Resource
 {
     public function __construct(
-      public bool $success,
-      public string $message,
-      public ?string $token
-    ) {}
+        public bool $success,
+        public string $message,
+        public ?string $token
+    ) {
+    }
 
     protected function calculateResponseStatus(Request $request): int
     {
-      return Response::HTTP_OK;
+        return Response::HTTP_OK;
     }
 }

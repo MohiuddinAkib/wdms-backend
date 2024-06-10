@@ -2,14 +2,14 @@
 
 namespace App\Domain\Wallet\Exceptions;
 
-use App\Support\DomainException;
 use App\Domain\Wallet\Resources\DeleteWalletResponseResource;
+use App\Support\DomainException;
 
 class WalletBalanceNotEmptyException extends DomainException
 {
     public function __construct()
     {
-        parent::__construct("Wallet balance is not empty.");
+        parent::__construct('Wallet balance is not empty.');
     }
 
     public function render(): DeleteWalletResponseResource

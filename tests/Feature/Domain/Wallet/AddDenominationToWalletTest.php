@@ -12,7 +12,7 @@ class AddDenominationToWalletTest extends TestCase
 
     public function test_should_be_authenticated_to_be_able_to_add_denomination_to_wallet(): void
     {
-        $response = $this->postJson(route('wallet.denomination') [
+        $response = $this->postJson(route('wallet.denomination')[
 
         ]);
 

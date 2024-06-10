@@ -3,13 +3,13 @@
 namespace Tests\Feature\Domain\Wallet;
 
 use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
-use Tests\TestCase;
 use App\Models\User;
 use Database\Factories\WalletFactory;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Exceptions;
 use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class DeleteWalletTest extends TestCase
 {
@@ -41,10 +41,10 @@ class DeleteWalletTest extends TestCase
         Exceptions::fake();
         $user = User::factory()->create();
         $wallet = WalletFactory::new()->withUserUuid($user->uuid)->create([
-            'balance' => $this->faker->randomNumber(nbDigits: 2)
+            'balance' => $this->faker->randomNumber(nbDigits: 2),
         ]);
         Sanctum::actingAs($user);
-        
+
         $response = $this->deleteJson(route('wallet.destroy', $wallet->getKey()));
         $response->assertBadRequest()
             ->assertJson([
@@ -60,7 +60,7 @@ class DeleteWalletTest extends TestCase
         $user = User::factory()->create();
         $wallet = WalletFactory::new()->withUserUuid($user->uuid)->create();
         Sanctum::actingAs($user);
-        
+
         $response = $this->deleteJson(route('wallet.destroy', $wallet->getKey()));
 
         $response

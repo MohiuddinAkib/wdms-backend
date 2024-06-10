@@ -7,8 +7,8 @@ use App\Domain\Auth\Dto\RegisterUserData;
 use App\Domain\Auth\Dto\RequestOtpData;
 use App\Domain\Auth\Notifications\LoginOtpNotification;
 use App\Domain\Auth\Resources\LoginUserResponseResource;
-use App\Domain\Auth\Resources\RequestOtpResponseResource;
 use App\Domain\Auth\Resources\RegisterUserResponseResource;
+use App\Domain\Auth\Resources\RequestOtpResponseResource;
 use App\Domain\User\UserAggregate;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -86,7 +86,7 @@ class AuthController extends Controller
             throw $validationError;
         }
 
-        if (!EnsureFrontendRequestsAreStateful::fromFrontend($request)) {
+        if (! EnsureFrontendRequestsAreStateful::fromFrontend($request)) {
             // FOR NON STATEFUL API CLIENT NEED ACCESS TOKEN
             $token = $user->createToken('auth-token')->plainTextToken;
 

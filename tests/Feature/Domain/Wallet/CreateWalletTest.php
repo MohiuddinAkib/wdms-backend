@@ -4,7 +4,6 @@ namespace Tests\Feature\Domain\Wallet;
 
 use App\Domain\Wallet\Projections\Wallet;
 use App\Models\User;
-use Brick\Math\BigDecimal;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Sanctum\Sanctum;
@@ -49,12 +48,12 @@ class CreateWalletTest extends TestCase
         ]);
 
         $response = $this->postJson(route('wallets.store'), [
-            'currency' => $this->faker->randomAscii()
+            'currency' => $this->faker->randomAscii(),
         ]);
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrors([
-                'currency' => 'Currency not supported'
+                'currency' => 'Currency not supported',
             ]);
     }
 
@@ -75,7 +74,7 @@ class CreateWalletTest extends TestCase
         ]);
 
         $response = $this->postJson(route('wallets.store'), [
-            'currency' => 'bdt'
+            'currency' => 'bdt',
         ]);
 
         $response->assertCreated()
@@ -84,8 +83,8 @@ class CreateWalletTest extends TestCase
                 'message' => 'Wallet created successfully',
                 'data' => [
                     'currency' => 'bdt',
-                    'balance' => 0
-                ]
+                    'balance' => 0,
+                ],
             ]);
     }
 
@@ -106,7 +105,7 @@ class CreateWalletTest extends TestCase
         ]);
 
         $response = $this->postJson(route('wallets.store'), [
-            'currency' => 'bdt'
+            'currency' => 'bdt',
         ]);
 
         $response->assertCreated()
@@ -115,18 +114,17 @@ class CreateWalletTest extends TestCase
                 'message' => 'Wallet created successfully',
                 'data' => [
                     'currency' => 'bdt',
-                    'balance' => 0
-                ]
+                    'balance' => 0,
+                ],
             ]);
 
+        $response = $this->postJson(route('wallets.store'), [
+            'currency' => 'bdt',
+        ]);
 
-            $response = $this->postJson(route('wallets.store'), [
-                'currency' => 'bdt'
-            ]);
-    
-            $response->assertUnprocessable()
-                ->assertJsonValidationErrors(['currency' => 'Wallet already exists with the currency: bdt']);
+        $response->assertUnprocessable()
+            ->assertJsonValidationErrors(['currency' => 'Wallet already exists with the currency: bdt']);
 
-            $this->assertDatabaseCount(Wallet::getModel()->getTable(), 1);
+        $this->assertDatabaseCount(Wallet::getModel()->getTable(), 1);
     }
 }

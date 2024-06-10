@@ -15,7 +15,7 @@ class DenominationController extends Controller
         // dd($repository->getDenominations($currency));
         return response()->json([
             'success' => true,
-            'data' => $repository->getDenominations($currency)
+            'data' => $repository->getDenominations($currency),
         ]);
     }
 }

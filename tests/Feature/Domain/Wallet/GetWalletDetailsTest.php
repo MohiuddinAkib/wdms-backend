@@ -22,13 +22,13 @@ class GetWalletDetailsTest extends TestCase
 
         $response->assertUnauthorized();
     }
-    
+
     public function test_should_be_owner_to_be_able_to_see_wallet_details(): void
     {
         $owner = User::factory()->create();
         /** @var Wallet */
         $wallet = WalletFactory::new()->withUserUuid($owner->uuid)->create();
-        
+
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
@@ -52,9 +52,7 @@ class GetWalletDetailsTest extends TestCase
                     'uuid' => $wallet->getKey(),
                     'balance' => '0.00',
                     'currency' => $wallet->currency,
-                ]
+                ],
             ]);
     }
-
-    
 }

@@ -2,9 +2,9 @@
 
 namespace App\Domain\Currency\Contracts;
 
-use Illuminate\Support\Collection;
 use App\Domain\Currency\Resources\CurrencyResource;
 use App\Domain\Currency\Resources\DenominationResource;
+use Illuminate\Support\Collection;
 
 interface CurrencyRepository
 {

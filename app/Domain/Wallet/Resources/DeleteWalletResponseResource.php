@@ -9,12 +9,13 @@ use Symfony\Component\HttpFoundation\Response;
 class DeleteWalletResponseResource extends Resource
 {
     public function __construct(
-      public bool $success,
-      public string $message,
-    ) {}
+        public bool $success,
+        public string $message,
+    ) {
+    }
 
     protected function calculateResponseStatus(Request $request): int
     {
-      return $this->success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
+        return $this->success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
     }
 }

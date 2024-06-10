@@ -10,8 +10,9 @@ use Spatie\LaravelData\Resource;
 class WalletResource extends Resource
 {
     public function __construct(
-      public string $uuid,
-      public string $currency,
-      public string $balance,
-    ) {}
+        public string $uuid,
+        public string $currency,
+        public string $balance,
+    ) {
+    }
 }

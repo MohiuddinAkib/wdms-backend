@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use Str;
+use App\Domain\Wallet\Projections\Wallet;
 use Faker\Generator;
 use Illuminate\Container\Container;
-use App\Domain\Wallet\Projections\Wallet;
+use Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
@@ -28,10 +28,10 @@ class WalletFactory
     {
         $state = array_merge(
             [
-                'uuid' => (string)Str::uuid(),
-                'currency' => $this->faker->randomElement(['bdt', 'usd', 'inr'])
-            ], 
-            $this->attributes, 
+                'uuid' => (string) Str::uuid(),
+                'currency' => $this->faker->randomElement(['bdt', 'usd', 'inr']),
+            ],
+            $this->attributes,
             $extra
         );
 
@@ -41,14 +41,14 @@ class WalletFactory
     public function withUserUuid(string $userUuid): self
     {
         return self::new([
-            'user_id' => $userUuid
+            'user_id' => $userUuid,
         ]);
     }
 
     public function withWalletUuid(string $walletUuid): self
     {
         return self::new([
-            'uuid' => $walletUuid
+            'uuid' => $walletUuid,
         ]);
     }
 }

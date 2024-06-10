@@ -22,7 +22,7 @@ return new class extends Migration
                 ->default(2);
             $table->timestamps();
 
-            // DATABASE LEVEL CHECK FOR USER WALLETS WITH UNIQUE CURRENCY 
+            // DATABASE LEVEL CHECK FOR USER WALLETS WITH UNIQUE CURRENCY
             $table->unique(['user_id', 'currency']);
         });
     }

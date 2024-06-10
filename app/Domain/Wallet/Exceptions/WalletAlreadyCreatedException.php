@@ -9,14 +9,14 @@ class WalletAlreadyCreatedException extends DomainException
 {
     public function __construct(string $currency)
     {
-        parent::__construct("Wallet already exists with the currency: " . $currency);   
+        parent::__construct('Wallet already exists with the currency: '.$currency);
     }
 
     public function render(): JsonResponse
     {
         return response()->json([
             'success' => false,
-            'message' => $this->getMessage()
+            'message' => $this->getMessage(),
         ]);
     }
 }

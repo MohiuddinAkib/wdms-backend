@@ -1,11 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Domain\Wallet\Projections\Wallet;
-use App\Http\Controllers\WalletController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DenominationController;
+use App\Http\Controllers\WalletController;
+use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -26,11 +25,11 @@ Route::get('currencies', [CurrencyController::class, 'index'])->name('currencies
 Route::get('currencies/{currency}/denominations', [DenominationController::class, 'index'])->name('denominations.index');
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::controller(WalletController::class)->group(function() {
+    Route::controller(WalletController::class)->group(function () {
         Route::post('wallets', 'store')->name('wallets.store');
         Route::delete('wallets/{wallet}', 'destroy')
-                ->name('wallets.destroy')
-                ->can('delete-wallet', 'wallet');
+            ->name('wallets.destroy')
+            ->can('delete-wallet', 'wallet');
 
         Route::get('wallets/{wallet}', 'show')
             ->name('wallets.show')

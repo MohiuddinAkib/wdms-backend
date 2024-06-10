@@ -3,9 +3,9 @@
 namespace App\Domain\Currency\Repositories;
 
 use App\Domain\Currency\Contracts\CurrencyRepository as ContractsCurrencyRepository;
-use Illuminate\Support\Collection;
 use App\Domain\Currency\Resources\CurrencyResource;
 use App\Domain\Currency\Resources\DenominationResource;
+use Illuminate\Support\Collection;
 
 class CurrencyRepository implements ContractsCurrencyRepository
 {
@@ -22,7 +22,7 @@ class CurrencyRepository implements ContractsCurrencyRepository
     public function getDenominations(string $currency): Collection
     {
         /**
-         * @param array{name: string, value: float|int} $denomination
+         * @param  array{name: string, value: float|int}  $denomination
          */
         $coins = collect(config("wallet.currencies.{$currency}.coins", []))
             ->map(fn (array $denomination) => new DenominationResource(
@@ -32,7 +32,7 @@ class CurrencyRepository implements ContractsCurrencyRepository
             ));
 
         /**
-         * @param array{name: string, value: float|int} $denomination
+         * @param  array{name: string, value: float|int}  $denomination
          */
         $bills = collect(config("wallet.currencies.{$currency}.bills", []))
             ->map(fn (array $denomination) => new DenominationResource(
@@ -41,7 +41,7 @@ class CurrencyRepository implements ContractsCurrencyRepository
                 type: 'bill'
             ));
 
-        return $coins->merge($bills)->values()->unique(fn (DenominationResource $denomination) => $denomination->name . $denomination->type . $denomination->value);
+        return $coins->merge($bills)->values()->unique(fn (DenominationResource $denomination) => $denomination->name.$denomination->type.$denomination->value);
     }
 
     public function isCurrencySupported(string $currency): bool
