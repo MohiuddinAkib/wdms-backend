@@ -24,7 +24,7 @@ class WalletResource extends Resource
         return new self(
             $wallet->getKey(),
             $wallet->currency,
-            $wallet->balance,
+            (string)$wallet->balance,
             WalletDenominationResource::collect($wallet->denominations)->all()
         );
     }
