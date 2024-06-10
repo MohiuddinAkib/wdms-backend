@@ -12,7 +12,6 @@ class MoneyAdded extends ShouldBeStored
         public string $walletId,
         public AddMoneyTransactionData $transactionData,
         public Carbon $happenedAt
-    )
-    {
+    ) {
     }
 }

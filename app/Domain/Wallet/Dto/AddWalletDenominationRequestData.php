@@ -40,7 +40,7 @@ class AddWalletDenominationRequestData extends Data
                 Rule::unique(Denomination::class)->where(fn (Builder $query) => $query->where('type', $context->payload['type'])),
             ],
             'type' => ['required', Rule::in(['coin', 'bill'])],
-            'value' => ['required']
+            'value' => ['required'],
         ];
     }
 

@@ -54,8 +54,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(TransactionController::class)
         ->prefix('transactions/{wallet}')
         ->name('transactions.')
-        ->group(function() {
+        ->group(function () {
             Route::post('/', 'store')->name('store')
-            ->can('update-wallet', 'wallet');
+                ->can('update-wallet', 'wallet');
         });
 });

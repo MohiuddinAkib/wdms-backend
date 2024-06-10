@@ -6,7 +6,6 @@ use App\Domain\Wallet\Dto\AddWalletDenominationData;
 use App\Domain\Wallet\Projections\Transaction;
 use App\Domain\Wallet\WalletAggregateRoot;
 use App\Models\User;
-use Brick\Math\BigInteger;
 use Database\Factories\WalletFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -28,14 +27,14 @@ class AddMoneyToWalletTransactionTest extends TestCase
         WalletAggregateRoot::retrieve($wallet->getKey())
             ->addWalletDenomination(new AddWalletDenominationData(
                 denominationId: $denominationId,
-                name: "5 Taka",
+                name: '5 Taka',
                 value: 5,
-                type: "bill"
+                type: 'bill'
             ))
             ->persist();
 
         $response = $this->postJson(route('transactions.store', $wallet->getKey()), [
-            
+
         ]);
 
         $response
@@ -54,9 +53,9 @@ class AddMoneyToWalletTransactionTest extends TestCase
         WalletAggregateRoot::retrieve($wallet->getKey())
             ->addWalletDenomination(new AddWalletDenominationData(
                 denominationId: $denominationId,
-                name: "5 Taka",
+                name: '5 Taka',
                 value: 5,
-                type: "bill"
+                type: 'bill'
             ))
             ->persist();
 
@@ -79,17 +78,17 @@ class AddMoneyToWalletTransactionTest extends TestCase
         WalletAggregateRoot::retrieve($wallet->getKey())
             ->addWalletDenomination(new AddWalletDenominationData(
                 denominationId: $denominationId,
-                name: "5 Taka",
+                name: '5 Taka',
                 value: 5,
-                type: "bill"
+                type: 'bill'
             ))
             ->persist();
 
         $response = $this->postJson(route('transactions.store', $wallet->getKey()), [
             'denominations' => [
                 [
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $response
@@ -111,9 +110,9 @@ class AddMoneyToWalletTransactionTest extends TestCase
         WalletAggregateRoot::retrieve($wallet->getKey())
             ->addWalletDenomination(new AddWalletDenominationData(
                 denominationId: $denominationId,
-                name: "5 Taka",
+                name: '5 Taka',
                 value: 5,
-                type: "bill"
+                type: 'bill'
             ))
             ->persist();
 
@@ -121,18 +120,17 @@ class AddMoneyToWalletTransactionTest extends TestCase
             'denominations' => [
                 [
                     'denomination_id' => $denominationId,
-                    'quantity' => 0
-                ]
-            ]
+                    'quantity' => 0,
+                ],
+            ],
         ]);
 
         $response
             ->assertUnprocessable()
             ->assertJsonValidationErrors([
-                'denominations.0.quantity' => 'The denominations.0.quantity field must be at least 1.'
+                'denominations.0.quantity' => 'The denominations.0.quantity field must be at least 1.',
             ]);
     }
-
 
     public function test_should_provide_valid_wallet_denomination_to_add_money_to_wallet(): void
     {
@@ -145,9 +143,9 @@ class AddMoneyToWalletTransactionTest extends TestCase
         WalletAggregateRoot::retrieve($wallet->getKey())
             ->addWalletDenomination(new AddWalletDenominationData(
                 denominationId: $denominationId,
-                name: "5 Taka",
+                name: '5 Taka',
                 value: 5,
-                type: "bill"
+                type: 'bill'
             ))
             ->persist();
 
@@ -155,15 +153,15 @@ class AddMoneyToWalletTransactionTest extends TestCase
             'denominations' => [
                 [
                     'denomination_id' => (string) Str::uuid(),
-                    'quantity' => 5
-                ]
-            ]
+                    'quantity' => 5,
+                ],
+            ],
         ]);
 
         $response
             ->assertUnprocessable()
             ->assertJsonValidationErrors([
-                'denominations.0.denomination_id' => 'The selected denominations.0.denomination id is invalid.'
+                'denominations.0.denomination_id' => 'The selected denominations.0.denomination id is invalid.',
             ]);
     }
 
@@ -176,21 +174,21 @@ class AddMoneyToWalletTransactionTest extends TestCase
                     'coins' => [
                         [
                             'name' => '5 Poisha',
-                            'value' => 0.05
+                            'value' => 0.05,
                         ],
                         [
                             'name' => '25 Poisha',
-                            'value' => 0.25
-                        ]
+                            'value' => 0.25,
+                        ],
                     ],
                     'bills' => [
                         [
                             'name' => '5 Taka',
-                            'value' => 5
-                        ]
-                    ]
-                ]
-            ]
+                            'value' => 5,
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $user = User::factory()->create();
@@ -205,21 +203,21 @@ class AddMoneyToWalletTransactionTest extends TestCase
         WalletAggregateRoot::retrieve($wallet->getKey())
             ->addWalletDenomination(new AddWalletDenominationData(
                 denominationId: $denominationId1,
-                name: "5 Taka",
+                name: '5 Taka',
                 value: 5,
-                type: "bill"
+                type: 'bill'
             ))
             ->addWalletDenomination(new AddWalletDenominationData(
                 denominationId: $denominationId2,
-                name: "5 Poisha",
+                name: '5 Poisha',
                 value: 0.05,
-                type: "coin"
+                type: 'coin'
             ))
             ->addWalletDenomination(new AddWalletDenominationData(
                 denominationId: $denominationId3,
-                name: "25 Poisha",
+                name: '25 Poisha',
                 value: 0.25,
-                type: "coin"
+                type: 'coin'
             ))
             ->persist();
 
@@ -227,17 +225,17 @@ class AddMoneyToWalletTransactionTest extends TestCase
             'denominations' => [
                 [
                     'denomination_id' => $denominationId1,
-                    'quantity' => 5
+                    'quantity' => 5,
                 ],
                 [
                     'denomination_id' => $denominationId2,
-                    'quantity' => 1
+                    'quantity' => 1,
                 ],
                 [
                     'denomination_id' => $denominationId3,
-                    'quantity' => 1
-                ]
-            ]
+                    'quantity' => 1,
+                ],
+            ],
         ]);
 
         $response
@@ -254,23 +252,23 @@ class AddMoneyToWalletTransactionTest extends TestCase
                             'id' => $denominationId3,
                             'name' => '25 Poisha',
                             'value' => 0.25,
-                            'type' => 'coin'
+                            'type' => 'coin',
                         ],
                         [
                             'id' => $denominationId2,
                             'name' => '5 Poisha',
                             'value' => 0.05,
-                            'type' => 'coin'
+                            'type' => 'coin',
                         ],
                         [
                             'id' => $denominationId1,
                             'name' => '5 Taka',
                             'value' => 5,
                             'type' => 'bill',
-                            'quantity' => 5
-                        ]
-                    ]
-                ]
+                            'quantity' => 5,
+                        ],
+                    ],
+                ],
             ]);
 
         $this->assertDatabaseCount(Transaction::getModel()->getTable(), 3);

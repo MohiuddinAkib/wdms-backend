@@ -2,9 +2,8 @@
 
 namespace Tests\Feature\Domain\Wallet;
 
-use App\Domain\Wallet\Projections\Denomination;
 use App\Domain\Wallet\Dto\AddWalletDenominationData;
-use App\Domain\Wallet\Dto\AddWalletDenominationRequestData;
+use App\Domain\Wallet\Projections\Denomination;
 use App\Domain\Wallet\WalletAggregateRoot;
 use App\Models\User;
 use Cache;

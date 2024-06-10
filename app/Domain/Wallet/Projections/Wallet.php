@@ -5,12 +5,11 @@ namespace App\Domain\Wallet\Projections;
 use App\Models\User;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
-use App\Domain\Wallet\Projections\Denomination;
-use Spatie\EventSourcing\Projections\Projection;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\EventSourcing\Projections\Projection;
 
 class Wallet extends Projection
 {
@@ -33,7 +32,7 @@ class Wallet extends Projection
             ->toScale(2, RoundingMode::DOWN);
 
         $this->writeable()->update([
-            'balance' => $result
+            'balance' => $result,
         ]);
     }
 

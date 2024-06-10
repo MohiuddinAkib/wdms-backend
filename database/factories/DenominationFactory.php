@@ -70,9 +70,10 @@ class DenominationFactory
         ]);
     }
 
-    public function withValue(float $value): self{
+    public function withValue(float $value): self
+    {
         return $this->state([
-            'value' => $value
+            'value' => $value,
         ]);
     }
 }

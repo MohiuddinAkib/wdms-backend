@@ -41,8 +41,8 @@ class TransactionController extends Controller
     public function store(Wallet $wallet, AddMoneyTransactionRequestData $data, CurrencyRepository $currencyRepository)
     {
         $denominationIds = collect($data->denominations)
-                ->map(fn (AddMoneyTransactionItemRequestData $denomination) => $denomination->denominationId)
-                ->values();
+            ->map(fn (AddMoneyTransactionItemRequestData $denomination) => $denomination->denominationId)
+            ->values();
 
         $denominationIdQuantityMapping = collect($data->denominations)
             ->mapWithKeys(fn (AddMoneyTransactionItemRequestData $denomination) => [$denomination->denominationId => $denomination->quantity])
@@ -50,20 +50,20 @@ class TransactionController extends Controller
 
         /** @var Collection<int, Denomination> */
         $denominations = Denomination::whereIn('uuid', $denominationIds)
-                        ->where('wallet_id', $wallet->getKey())
-                        ->get();
-        
+            ->where('wallet_id', $wallet->getKey())
+            ->get();
+
         $dtos = $denominations
-                ->map(function(Denomination $denomination) use($denominationIdQuantityMapping) {
-                    return new AddMoneyTransactionItemData(
-                        (string) Str::uuid(),
-                        $denomination->getKey(),
-                        $denomination->type,
-                        $denomination->value,
-                        $denominationIdQuantityMapping[$denomination->getKey()]
-                    );
-                })
-                ->values();
+            ->map(function (Denomination $denomination) use ($denominationIdQuantityMapping) {
+                return new AddMoneyTransactionItemData(
+                    (string) Str::uuid(),
+                    $denomination->getKey(),
+                    $denomination->type,
+                    $denomination->value,
+                    $denominationIdQuantityMapping[$denomination->getKey()]
+                );
+            })
+            ->values();
 
         WalletAggregateRoot::retrieve($wallet->getKey())
             ->addMoney(new AddMoneyTransactionData(
@@ -76,7 +76,7 @@ class TransactionController extends Controller
 
         return new AddMoneyTransactionResponseResource(
             true,
-            "Money added successfully.",
+            'Money added successfully.',
             WalletResource::from($wallet)
         );
     }

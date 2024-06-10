@@ -12,6 +12,6 @@ class Transaction extends Projection
     protected $guarded = [];
 
     protected $casts = [
-        'happened_at' => 'datetime'
+        'happened_at' => 'datetime',
     ];
 }

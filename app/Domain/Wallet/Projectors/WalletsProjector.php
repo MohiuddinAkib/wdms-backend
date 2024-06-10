@@ -3,11 +3,11 @@
 namespace App\Domain\Wallet\Projectors;
 
 use App\Domain\Wallet\Events\MoneyAdded;
-use App\Domain\Wallet\Projections\Denomination;
 use App\Domain\Wallet\Events\WalletCreated;
 use App\Domain\Wallet\Events\WalletDeleted;
 use App\Domain\Wallet\Events\WalletDenominationAdded;
 use App\Domain\Wallet\Events\WalletDenominationRemoved;
+use App\Domain\Wallet\Projections\Denomination;
 use App\Domain\Wallet\Projections\Transaction;
 use App\Domain\Wallet\Projections\Wallet;
 use App\Models\User;
@@ -48,7 +48,7 @@ class WalletsProjector extends Projector
 
     public function onMoneyAdded(MoneyAdded $event): void
     {
-        DB::transaction(function() use($event) {
+        DB::transaction(function () use ($event) {
             $denominations = $event->transactionData->denominations;
 
             Wallet::find($event->walletId)

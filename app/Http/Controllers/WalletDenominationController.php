@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Wallet\Projections\Denomination;
 use App\Domain\Wallet\Dto\AddWalletDenominationData;
 use App\Domain\Wallet\Dto\AddWalletDenominationRequestData;
 use App\Domain\Wallet\Dto\RemoveWalletDenominationData;
 use App\Domain\Wallet\Exceptions\WalletDenominationBalanceExistsException;
+use App\Domain\Wallet\Projections\Denomination;
 use App\Domain\Wallet\Projections\Wallet;
 use App\Domain\Wallet\Resources\AddWalletDenominationResponseResource;
 use App\Domain\Wallet\Resources\DeleteWalletDenominationResponseResource;

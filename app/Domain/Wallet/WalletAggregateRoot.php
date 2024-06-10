@@ -3,12 +3,11 @@
 namespace App\Domain\Wallet;
 
 use App\Domain\Wallet\Dto\AddMoneyTransactionData;
-use Brick\Math\BigDecimal;
-use App\Domain\Wallet\Events\WalletCreated;
-use App\Domain\Wallet\Events\WalletDeleted;
 use App\Domain\Wallet\Dto\AddWalletDenominationData;
 use App\Domain\Wallet\Dto\RemoveWalletDenominationData;
 use App\Domain\Wallet\Events\MoneyAdded;
+use App\Domain\Wallet\Events\WalletCreated;
+use App\Domain\Wallet\Events\WalletDeleted;
 use App\Domain\Wallet\Events\WalletDenominationAdded;
 use App\Domain\Wallet\Events\WalletDenominationRemoved;
 use App\Domain\Wallet\Exceptions\UnknownDenominationException;
@@ -16,6 +15,7 @@ use App\Domain\Wallet\Exceptions\WalletAlreadyExistsException;
 use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
 use App\Domain\Wallet\Exceptions\WalletDenominationAlreadyExistsException;
 use App\Domain\Wallet\Exceptions\WalletDenominationBalanceExistsException;
+use Brick\Math\BigDecimal;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
 class WalletAggregateRoot extends AggregateRoot
@@ -62,7 +62,7 @@ class WalletAggregateRoot extends AggregateRoot
     {
         // WON'T ALLOW TO DELETE IF THERE IS BALANCE IN THE WALLET
         throw_if(
-            BigDecimal::of($this->balance)->compareTo(0) > 0, 
+            BigDecimal::of($this->balance)->compareTo(0) > 0,
             WalletBalanceNotEmptyException::class
         );
 
@@ -142,6 +142,6 @@ class WalletAggregateRoot extends AggregateRoot
     protected function applyMoneyAdded(MoneyAdded $event)
     {
         $this->balance = (string) BigDecimal::of($this->balance)
-                                    ->plus($event->transactionData->total());
+            ->plus($event->transactionData->total());
     }
 }

@@ -86,7 +86,7 @@ class AddDenominationToWalletTest extends TestCase
             ->assertJsonValidationErrors([
                 'name',
                 'type',
-                'value'
+                'value',
             ]);
     }
 
@@ -102,7 +102,7 @@ class AddDenominationToWalletTest extends TestCase
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
             'name' => '5 Taka',
             'type' => 'safasdf',
-            'value' =>  5
+            'value' => 5,
         ]);
 
         $response->assertUnprocessable()
@@ -125,7 +125,7 @@ class AddDenominationToWalletTest extends TestCase
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
             'name' => '5 Taka',
             'type' => 'coin',
-            'value' =>  5
+            'value' => 5,
         ]);
 
         $response->assertUnprocessable()
@@ -155,7 +155,7 @@ class AddDenominationToWalletTest extends TestCase
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
             'name' => '5 Poisha',
             'type' => 'coin',
-            'value' =>  0.05
+            'value' => 0.05,
         ]);
 
         $response->assertUnprocessable()
@@ -189,7 +189,7 @@ class AddDenominationToWalletTest extends TestCase
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
             'name' => '5 Poisha',
             'type' => 'coin',
-            'value' =>  0.05
+            'value' => 0.05,
         ]);
 
         $response->assertCreated()
@@ -202,7 +202,7 @@ class AddDenominationToWalletTest extends TestCase
                         [
                             'name' => '5 Poisha',
                             'type' => 'coin',
-                            'value' => 0.05
+                            'value' => 0.05,
                         ],
                     ],
                 ],
@@ -211,7 +211,7 @@ class AddDenominationToWalletTest extends TestCase
         $this->assertDatabaseHas(Denomination::getModel()->getTable(), [
             'name' => '5 Poisha',
             'type' => 'coin',
-            'value' => 0.05
+            'value' => 0.05,
         ]);
     }
 }
