@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Domain\Wallet;
 
+use App\Domain\Wallet\Projections\Wallet;
 use App\Models\User;
 use Brick\Math\BigDecimal;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -86,5 +87,46 @@ class CreateWalletTest extends TestCase
                     'balance' => 0
                 ]
             ]);
+    }
+
+    public function test_should_not_create_two_wallets_with_same_currency(): void
+    {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        config()->set('wallet', [
+            'currencies' => [
+                'bdt' => [
+                    'name' => 'Bangladeshi Taka',
+                ],
+                'usd' => [
+                    'name' => 'United States dollar',
+                ],
+            ],
+        ]);
+
+        $response = $this->postJson(route('wallet.store'), [
+            'currency' => 'bdt'
+        ]);
+
+        $response->assertCreated()
+            ->assertJson([
+                'success' => true,
+                'message' => 'Wallet created successfully',
+                'data' => [
+                    'currency' => 'bdt',
+                    'balance' => 0
+                ]
+            ]);
+
+
+            $response = $this->postJson(route('wallet.store'), [
+                'currency' => 'bdt'
+            ]);
+    
+            $response->assertUnprocessable()
+                ->assertJsonValidationErrors(['currency' => 'Wallet already exists with the currency: bdt']);
+
+            $this->assertDatabaseCount(Wallet::getModel()->getTable(), 1);
     }
 }

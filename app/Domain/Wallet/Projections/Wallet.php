@@ -2,11 +2,13 @@
 
 namespace App\Domain\Wallet\Projections;
 
+use App\Models\User;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
 use Spatie\EventSourcing\Projections\Projection;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Wallet extends Projection
 {
@@ -35,5 +37,10 @@ class Wallet extends Projection
             ->toScale($decimalPlacesValue, RoundingMode::DOWN);
 
         $this->writeable()->increment('balance', $result);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, ownerKey: 'uuid');
     }
 }

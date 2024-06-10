@@ -3,6 +3,7 @@
 namespace App\Domain\Wallet\Projectors;
 
 use App\Domain\Wallet\Events\WalletCreated;
+use App\Domain\Wallet\Events\WalletDeleted;
 use App\Domain\Wallet\Projections\Wallet;
 use App\Models\User;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
@@ -16,5 +17,10 @@ class WalletsProjector extends Projector
             'currency' => $event->currency,
             User::getModel()->getForeignKey() => $event->userId,
         ]);
+    }
+
+    public function onWalletDeleted(WalletDeleted $event): void
+    {
+        Wallet::find($event->walletId)?->writeable()->delete();
     }
 }

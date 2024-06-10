@@ -3,8 +3,8 @@
 namespace Tests\Feature\Domain\User;
 
 use App\Domain\Auth\Dto\RequestOtpData;
+use App\Domain\Auth\Notifications\LoginOtpNotification;
 use App\Models\User;
-use App\Notifications\LoginOtpNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Notification;
@@ -32,7 +32,7 @@ class UserLoginTest extends TestCase
     {
         $response = $this->postJson(route('auth.request-otp'), [
             'email' => $this->faker->email(),
-            'password' => $this->faker->password(),
+            'password' => $this->faker->password(minLength: 8),
         ]);
 
         $response->assertUnprocessable()
@@ -44,7 +44,7 @@ class UserLoginTest extends TestCase
 
         $response = $this->postJson(route('auth.request-otp'), [
             'email' => $user->email,
-            'password' => $this->faker->password(),
+            'password' => $this->faker->password(minLength: 8),
         ]);
 
         $response->assertUnprocessable()
@@ -71,7 +71,6 @@ class UserLoginTest extends TestCase
         );
 
         $response = $this->postJson(route('auth.request-otp'), $dto->all());
-
         $response
             ->assertOk()
             ->assertJson([

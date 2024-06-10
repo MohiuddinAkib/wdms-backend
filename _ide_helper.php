@@ -18039,6 +18039,64 @@ namespace Illuminate\Support\Facades {
             }
     }
 
+namespace Tzsk\Otp\Facades {
+            /**
+     * 
+     *
+     * @method static string make(string $key)
+     * @method static string create(string $key)
+     * @method static bool match(mixed $otp, string $key)
+     * @method static bool verify(mixed $otp, string $key)
+     * @see \Tzsk\Otp\Otp
+     */        class Otp {
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function expiry($expiry)
+        {
+                        /** @var \Tzsk\Otp\Otp $instance */
+                        return $instance->expiry($expiry);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function digits($digits)
+        {
+                        /** @var \Tzsk\Otp\Otp $instance */
+                        return $instance->digits($digits);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function generate($key)
+        {
+                        /** @var \Tzsk\Otp\Otp $instance */
+                        return $instance->generate($key);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function check($code, $key)
+        {
+                        /** @var \Tzsk\Otp\Otp $instance */
+                        return $instance->check($code, $key);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */        public static function forget($key)
+        {
+                        /** @var \Tzsk\Otp\Otp $instance */
+                        return $instance->forget($key);
+        }
+            }
+    }
+
 namespace Illuminate\Http {
             /**
      * 
@@ -21715,6 +21773,7 @@ namespace  {
             class Validator extends \Illuminate\Support\Facades\Validator {}
             class View extends \Illuminate\Support\Facades\View {}
             class Vite extends \Illuminate\Support\Facades\Vite {}
+            class Otp extends \Tzsk\Otp\Facades\Otp {}
     }
 
 

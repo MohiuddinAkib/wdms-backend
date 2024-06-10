@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
-use App\Domain\Currency\Contracts\CurrencyRepository as ContractsCurrencyRepository;
+use Gate;
 use App\Domain\Currency\Repositories\CurrencyRepository;
+use App\Domain\Wallet\Policies\WalletPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use RateLimiter;
+use App\Domain\Currency\Contracts\CurrencyRepository as ContractsCurrencyRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,5 +31,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(ContractsCurrencyRepository::class, CurrencyRepository::class);
+
+        Gate::define('delete-wallet',  [WalletPolicy::class, 'delete']);
+        Gate::define('update-wallet',  [WalletPolicy::class, 'update']);
     }
 }

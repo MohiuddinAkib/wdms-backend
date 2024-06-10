@@ -13,8 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('wallets', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('uuid')->index();
+            $table->uuid('uuid')->primary();
             $table->foreignUuid('user_id')->constrained(table: User::getModel()->getTable(), column: 'uuid');
             $table->string('currency');
             $table->decimal('balance', 64, 0)

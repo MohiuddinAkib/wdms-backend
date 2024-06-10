@@ -2,7 +2,9 @@
 
 namespace App\Domain\Auth\Resources;
 
+use Illuminate\Http\Request;
 use Spatie\LaravelData\Resource;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoginUserResponseResource extends Resource
 {
@@ -11,4 +13,9 @@ class LoginUserResponseResource extends Resource
       public string $message,
       public ?string $token
     ) {}
+
+    protected function calculateResponseStatus(Request $request): int
+    {
+      return Response::HTTP_OK;
+    }
 }

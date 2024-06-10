@@ -11,7 +11,7 @@
  */
 
 
-namespace App\Models{
+namespace App\Domain\Currency\Projections{
 /**
  * 
  *
@@ -26,6 +26,19 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Denomination whereUpdatedAt($value)
  */
 	class Denomination extends \Eloquent {}
+}
+
+namespace App\Domain\Wallet\Projections{
+/**
+ * 
+ *
+ * @property-read mixed $balance
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Wallet newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Wallet newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Wallet query()
+ */
+	class Wallet extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -59,6 +72,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
+ * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
@@ -73,16 +88,5 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  */
 	class User extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * 
- *
- * @method static \Illuminate\Database\Eloquent\Builder|Wallet newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Wallet newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Wallet query()
- */
-	class Wallet extends \Eloquent {}
 }
 

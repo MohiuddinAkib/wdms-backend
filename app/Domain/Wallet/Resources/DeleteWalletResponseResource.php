@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Domain\Auth\Resources;
+namespace App\Domain\Wallet\Resources;
 
 use Illuminate\Http\Request;
 use Spatie\LaravelData\Resource;
 use Symfony\Component\HttpFoundation\Response;
 
-class RequestOtpResponseResource extends Resource
+class DeleteWalletResponseResource extends Resource
 {
     public function __construct(
       public bool $success,
-      public string $message
+      public string $message,
     ) {}
 
     protected function calculateResponseStatus(Request $request): int
     {
-      return Response::HTTP_OK;
+      return $this->success ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
     }
 }
