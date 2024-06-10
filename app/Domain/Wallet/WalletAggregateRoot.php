@@ -2,10 +2,13 @@
 
 namespace App\Domain\Wallet;
 
-use App\Domain\Wallet\Dto\AddWalletDenominationData;
-use App\Domain\Wallet\Dto\RemoveWalletDenominationData;
+use App\Domain\Wallet\Dto\AddMoneyTransactionData;
+use Brick\Math\BigDecimal;
 use App\Domain\Wallet\Events\WalletCreated;
 use App\Domain\Wallet\Events\WalletDeleted;
+use App\Domain\Wallet\Dto\AddWalletDenominationData;
+use App\Domain\Wallet\Dto\RemoveWalletDenominationData;
+use App\Domain\Wallet\Events\MoneyAdded;
 use App\Domain\Wallet\Events\WalletDenominationAdded;
 use App\Domain\Wallet\Events\WalletDenominationRemoved;
 use App\Domain\Wallet\Exceptions\UnknownDenominationException;
@@ -13,10 +16,9 @@ use App\Domain\Wallet\Exceptions\WalletAlreadyExistsException;
 use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
 use App\Domain\Wallet\Exceptions\WalletDenominationAlreadyExistsException;
 use App\Domain\Wallet\Exceptions\WalletDenominationBalanceExistsException;
-use Brick\Math\BigDecimal;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
-class WalletAggregate extends AggregateRoot
+class WalletAggregateRoot extends AggregateRoot
 {
     private bool $created = false;
 
@@ -39,6 +41,7 @@ class WalletAggregate extends AggregateRoot
 
     public function createWallet(string $userId, string $currency): self
     {
+        // WON'T ALLOW TO CREATE DUPLICATE WALLET WITH SAME UID AND CURRENCY
         throw_if($this->created, WalletAlreadyExistsException::class, $currency);
 
         $this->recordThat(new WalletCreated(
@@ -57,9 +60,11 @@ class WalletAggregate extends AggregateRoot
 
     public function deleteWallet(): self
     {
-        if (BigDecimal::of($this->balance)->compareTo(0) > 0) {
-            throw new WalletBalanceNotEmptyException();
-        }
+        // WON'T ALLOW TO DELETE IF THERE IS BALANCE IN THE WALLET
+        throw_if(
+            BigDecimal::of($this->balance)->compareTo(0) > 0, 
+            WalletBalanceNotEmptyException::class
+        );
 
         $this->recordThat(new WalletDeleted(
             walletId: $this->uuid()
@@ -68,7 +73,7 @@ class WalletAggregate extends AggregateRoot
         return $this;
     }
 
-    public function addDenomination(string $denominationId, AddWalletDenominationData $denominationData): self
+    public function addWalletDenomination(AddWalletDenominationData $denominationData): self
     {
         // CHECKING IF THE DENOMINATION IS ALREADY ADDED TO THIS WALLET
         throw_if(
@@ -83,8 +88,9 @@ class WalletAggregate extends AggregateRoot
 
         $this->recordThat(new WalletDenominationAdded(
             walletId: $this->uuid(),
-            denominationId: $denominationId,
+            denominationId: $denominationData->denominationId,
             name: $denominationData->name,
+            value: $denominationData->value,
             type: $denominationData->type
         ));
 
@@ -93,21 +99,26 @@ class WalletAggregate extends AggregateRoot
 
     protected function applyWalletDenominationAdded(WalletDenominationAdded $event): void
     {
+        // TRACKING WHICH COINS ARE ADDED IN THE WALLET
         if ($event->type === 'coin') {
             $this->coins[] = $event->name;
         }
 
+        // TRACKING WHICH BILLS ARE ADDED IN THE WALLET
         if ($event->type === 'bill') {
             $this->bills[] = $event->name;
         }
 
+        // TRACKING ALL ADDED COINS AND BILLS ID
         $this->denominationIds[] = $event->denominationId;
     }
 
     public function removeDenomination(RemoveWalletDenominationData $data): self
     {
+        // CHECKING IF THE PASSED DENOMINATION ID IS VALID TO REMOVE
         throw_unless(in_array($data->denominationId, $this->denominationIds), UnknownDenominationException::class);
 
+        // CHECKING IF THE DENOMINATION HAS BALANCE
         throw_if($data->quantity > 0, WalletDenominationBalanceExistsException::class);
 
         $this->recordThat(new WalletDenominationRemoved(
@@ -115,5 +126,22 @@ class WalletAggregate extends AggregateRoot
         ));
 
         return $this;
+    }
+
+    public function addMoney(AddMoneyTransactionData $data): self
+    {
+        $this->recordThat(new MoneyAdded(
+            walletId: $this->uuid(),
+            transactionData: $data,
+            happenedAt: now()
+        ));
+
+        return $this;
+    }
+
+    protected function applyMoneyAdded(MoneyAdded $event)
+    {
+        $this->balance = (string) BigDecimal::of($this->balance)
+                                    ->plus($event->transactionData->total());
     }
 }

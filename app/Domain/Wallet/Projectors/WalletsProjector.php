@@ -2,13 +2,16 @@
 
 namespace App\Domain\Wallet\Projectors;
 
-use App\Domain\Currency\Projections\Denomination;
+use App\Domain\Wallet\Events\MoneyAdded;
+use App\Domain\Wallet\Projections\Denomination;
 use App\Domain\Wallet\Events\WalletCreated;
 use App\Domain\Wallet\Events\WalletDeleted;
 use App\Domain\Wallet\Events\WalletDenominationAdded;
 use App\Domain\Wallet\Events\WalletDenominationRemoved;
+use App\Domain\Wallet\Projections\Transaction;
 use App\Domain\Wallet\Projections\Wallet;
 use App\Models\User;
+use DB;
 use Spatie\EventSourcing\EventHandlers\Projectors\Projector;
 
 class WalletsProjector extends Projector
@@ -33,6 +36,7 @@ class WalletsProjector extends Projector
             'uuid' => $event->denominationId,
             'name' => $event->name,
             'type' => $event->type,
+            'value' => $event->value,
             'wallet_id' => $event->walletId,
         ]);
     }
@@ -40,5 +44,32 @@ class WalletsProjector extends Projector
     public function onWalletDenominationRemoved(WalletDenominationRemoved $event): void
     {
         Denomination::find($event->denominationId)?->writeable()->delete();
+    }
+
+    public function onMoneyAdded(MoneyAdded $event): void
+    {
+        DB::transaction(function() use($event) {
+            $denominations = $event->transactionData->denominations;
+
+            Wallet::find($event->walletId)
+                ->writeable()
+                ->deposit($event->transactionData->total());
+
+            foreach ($denominations as $denomination) {
+                Transaction::new()->writeable()->create([
+                    'uuid' => $denomination->transactionId,
+                    'wallet_id' => $event->walletId,
+                    'denomination_id' => $denomination->denominationId,
+                    'type' => 'add',
+                    'quantity' => $denomination->quantity,
+                    'happened_at' => $event->happenedAt,
+                ]);
+
+                Denomination::where('wallet_id', $event->walletId)
+                    ->find($denomination->denominationId)
+                    ->writeable()
+                    ->increment('quantity', $denomination->quantity);
+            }
+        });
     }
 }

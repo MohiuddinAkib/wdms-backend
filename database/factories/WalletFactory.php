@@ -68,4 +68,11 @@ class WalletFactory
             'currency' => $currency,
         ]);
     }
+
+    public function withBalance(float|int|string $balance): self
+    {
+        return $this->state([
+            'balance' => $balance,
+        ]);
+    }
 }

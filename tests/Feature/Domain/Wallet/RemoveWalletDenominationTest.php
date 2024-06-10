@@ -2,9 +2,10 @@
 
 namespace Tests\Feature\Domain\Wallet;
 
-use App\Domain\Currency\Projections\Denomination;
+use App\Domain\Wallet\Projections\Denomination;
 use App\Domain\Wallet\Dto\AddWalletDenominationData;
-use App\Domain\Wallet\WalletAggregate;
+use App\Domain\Wallet\Dto\AddWalletDenominationRequestData;
+use App\Domain\Wallet\WalletAggregateRoot;
 use App\Models\User;
 use Cache;
 use Database\Factories\DenominationFactory;
@@ -30,9 +31,10 @@ class RemoveWalletDenominationTest extends TestCase
             ->withUserUuid($user->uuid)
             ->create();
         $denomination = DenominationFactory::new()
-            ->withName($this->faker->name())
+            ->withName('5 taka')
             ->withType('coin')
             ->withQuantity(6)
+            ->withValue(5)
             ->withWalletUuid($wallet->getkey())
             ->create();
 
@@ -53,9 +55,10 @@ class RemoveWalletDenominationTest extends TestCase
             ->create();
 
         $denomination = DenominationFactory::new()
-            ->withName($this->faker->name())
+            ->withName('5 taka')
             ->withType('coin')
             ->withQuantity(6)
+            ->withValue(5)
             ->withWalletUuid($wallet->getkey())
             ->create();
 
@@ -73,9 +76,10 @@ class RemoveWalletDenominationTest extends TestCase
             ->withUserUuid($user->uuid)
             ->create();
         DenominationFactory::new()
-            ->withName($this->faker->name())
+            ->withName('5 Taka')
             ->withType('coin')
             ->withQuantity(6)
+            ->withValue(5)
             ->withWalletUuid($wallet->getkey())
             ->create();
         Sanctum::actingAs($user);
@@ -87,8 +91,9 @@ class RemoveWalletDenominationTest extends TestCase
             ->withUserUuid($user2->uuid)
             ->create();
         $denomination = DenominationFactory::new()
-            ->withName($this->faker->name())
+            ->withName('5 Taka')
             ->withType('bill')
+            ->withValue(5)
             ->withQuantity(6)
             ->withWalletUuid($wallet2->getkey())
             ->create();
@@ -109,9 +114,10 @@ class RemoveWalletDenominationTest extends TestCase
             ->create();
 
         $denomination = DenominationFactory::new()
-            ->withName($this->faker->name())
+            ->withName('5 taka')
             ->withType('coin')
             ->withQuantity(6)
+            ->withValue(5)
             ->withWalletUuid($wallet->getkey())
             ->create();
 
@@ -139,11 +145,12 @@ class RemoveWalletDenominationTest extends TestCase
 
         $denominationId = (string) Str::uuid();
 
-        WalletAggregate::retrieve($wallet->getKey())
-            ->addDenomination(
-                $denominationId,
+        WalletAggregateRoot::retrieve($wallet->getKey())
+            ->addWalletDenomination(
                 new AddWalletDenominationData(
+                    $denominationId,
                     '5 Poisha',
+                    0.05,
                     'coin'
                 )
             )

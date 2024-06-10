@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Domain\Wallet;
 
-use App\Domain\Currency\Projections\Denomination;
+use App\Domain\Wallet\Projections\Denomination;
 use App\Models\User;
 use Cache;
 use Database\Factories\DenominationFactory;
@@ -86,6 +86,7 @@ class AddDenominationToWalletTest extends TestCase
             ->assertJsonValidationErrors([
                 'name',
                 'type',
+                'value'
             ]);
     }
 
@@ -101,6 +102,7 @@ class AddDenominationToWalletTest extends TestCase
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
             'name' => '5 Taka',
             'type' => 'safasdf',
+            'value' =>  5
         ]);
 
         $response->assertUnprocessable()
@@ -123,6 +125,7 @@ class AddDenominationToWalletTest extends TestCase
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
             'name' => '5 Taka',
             'type' => 'coin',
+            'value' =>  5
         ]);
 
         $response->assertUnprocessable()
@@ -143,6 +146,7 @@ class AddDenominationToWalletTest extends TestCase
         DenominationFactory::new()->withName('5 Poisha')
             ->withType('coin')
             ->withQuantity(5)
+            ->withValue(0.05)
             ->withWalletUuid($wallet->getKey())
             ->create();
 
@@ -151,6 +155,7 @@ class AddDenominationToWalletTest extends TestCase
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
             'name' => '5 Poisha',
             'type' => 'coin',
+            'value' =>  0.05
         ]);
 
         $response->assertUnprocessable()
@@ -184,6 +189,7 @@ class AddDenominationToWalletTest extends TestCase
         $response = $this->postJson(route('wallet-denominations.store', $wallet->getKey()), [
             'name' => '5 Poisha',
             'type' => 'coin',
+            'value' =>  0.05
         ]);
 
         $response->assertCreated()
@@ -196,6 +202,7 @@ class AddDenominationToWalletTest extends TestCase
                         [
                             'name' => '5 Poisha',
                             'type' => 'coin',
+                            'value' => 0.05
                         ],
                     ],
                 ],
@@ -204,6 +211,7 @@ class AddDenominationToWalletTest extends TestCase
         $this->assertDatabaseHas(Denomination::getModel()->getTable(), [
             'name' => '5 Poisha',
             'type' => 'coin',
+            'value' => 0.05
         ]);
     }
 }

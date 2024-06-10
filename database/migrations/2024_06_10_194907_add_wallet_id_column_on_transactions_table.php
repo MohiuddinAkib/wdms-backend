@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('denominations', function (Blueprint $table) {
+        Schema::table('transactions', function (Blueprint $table) {
             $table->foreignUuid('wallet_id')->constrained('wallets', 'uuid');
-
-            $table->unique(['wallet_id', 'name']);
         });
     }
 
@@ -23,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('denominations', function (Blueprint $table) {
+        Schema::table('transactions', function (Blueprint $table) {
             $table->dropConstrainedForeignId('wallet_id');
         });
     }

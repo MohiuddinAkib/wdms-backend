@@ -10,6 +10,7 @@ class WalletDenominationAdded extends ShouldBeStored
         public string $walletId,
         public string $denominationId,
         public string $name,
+        public float|int $value,
         public string $type
     ) {
     }

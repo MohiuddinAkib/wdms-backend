@@ -50,6 +50,7 @@ class GetWalletDetailsTest extends TestCase
             ->withName('1 Poisha')
             ->withType('coin')
             ->withQuantity(5)
+            ->withValue(0.01)
             ->create();
 
         $denomination2 = DenominationFactory::new()
@@ -57,6 +58,7 @@ class GetWalletDetailsTest extends TestCase
             ->withName('5 Taka')
             ->withType('bill')
             ->withQuantity(2)
+            ->withValue(5)
             ->create();
 
         Sanctum::actingAs($user);

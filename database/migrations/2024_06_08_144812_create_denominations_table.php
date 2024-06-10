@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedInteger('quantity')
                 ->default(0);
             $table->string('type');
+            $table->decimal('value');
             $table->timestamps();
         });
     }

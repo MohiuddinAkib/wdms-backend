@@ -16,10 +16,8 @@ return new class extends Migration
             $table->uuid('uuid')->primary();
             $table->foreignUuid('user_id')->constrained(table: User::getModel()->getTable(), column: 'uuid');
             $table->string('currency');
-            $table->decimal('balance', 64, 0)
-                ->default(0);
-            $table->unsignedSmallInteger('decimal_places')
-                ->default(2);
+            $table->string('balance')
+                ->default('0');
             $table->timestamps();
 
             // DATABASE LEVEL CHECK FOR USER WALLETS WITH UNIQUE CURRENCY

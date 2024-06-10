@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Domain\Currency\Projections\Denomination;
+use App\Domain\Wallet\Projections\Denomination;
 use Faker\Generator;
 use Illuminate\Container\Container;
 
@@ -67,6 +67,12 @@ class DenominationFactory
     {
         return $this->state([
             'type' => $type,
+        ]);
+    }
+
+    public function withValue(float $value): self{
+        return $this->state([
+            'value' => $value
         ]);
     }
 }

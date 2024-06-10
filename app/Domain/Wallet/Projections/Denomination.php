@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Currency\Projections;
+namespace App\Domain\Wallet\Projections;
 
 use App\Domain\Wallet\Projections\Wallet;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -2,8 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Transaction;
+use App\Domain\Currency\Contracts\CurrencyRepository;
+use App\Domain\Wallet\Dto\AddMoneyTransactionData;
+use App\Domain\Wallet\Dto\AddMoneyTransactionItemData;
+use App\Domain\Wallet\Dto\AddMoneyTransactionItemRequestData;
+use App\Domain\Wallet\Dto\AddMoneyTransactionRequestData;
+use App\Domain\Wallet\Projections\Denomination;
+use App\Domain\Wallet\Projections\Transaction;
+use App\Domain\Wallet\Projections\Wallet;
+use App\Domain\Wallet\Resources\AddMoneyTransactionResponseResource;
+use App\Domain\Wallet\Resources\WalletResource;
+use App\Domain\Wallet\WalletAggregateRoot;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Str;
 
 class TransactionController extends Controller
 {
@@ -26,9 +38,47 @@ class TransactionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Wallet $wallet, AddMoneyTransactionRequestData $data, CurrencyRepository $currencyRepository)
     {
-        //
+        $denominationIds = collect($data->denominations)
+                ->map(fn (AddMoneyTransactionItemRequestData $denomination) => $denomination->denominationId)
+                ->values();
+
+        $denominationIdQuantityMapping = collect($data->denominations)
+            ->mapWithKeys(fn (AddMoneyTransactionItemRequestData $denomination) => [$denomination->denominationId => $denomination->quantity])
+            ->all();
+
+        /** @var Collection<int, Denomination> */
+        $denominations = Denomination::whereIn('uuid', $denominationIds)
+                        ->where('wallet_id', $wallet->getKey())
+                        ->get();
+        
+        $dtos = $denominations
+                ->map(function(Denomination $denomination) use($denominationIdQuantityMapping) {
+                    return new AddMoneyTransactionItemData(
+                        (string) Str::uuid(),
+                        $denomination->getKey(),
+                        $denomination->type,
+                        $denomination->value,
+                        $denominationIdQuantityMapping[$denomination->getKey()]
+                    );
+                })
+                ->values();
+
+        WalletAggregateRoot::retrieve($wallet->getKey())
+            ->addMoney(new AddMoneyTransactionData(
+                $wallet->getKey(),
+                $dtos->all()
+            ))
+            ->persist();
+
+        $wallet->refresh();
+
+        return new AddMoneyTransactionResponseResource(
+            true,
+            "Money added successfully.",
+            WalletResource::from($wallet)
+        );
     }
 
     /**

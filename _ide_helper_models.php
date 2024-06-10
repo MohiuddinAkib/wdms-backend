@@ -11,7 +11,7 @@
  */
 
 
-namespace App\Domain\Currency\Projections{
+namespace App\Domain\Wallet\Projections{
 /**
  * 
  *
@@ -34,7 +34,7 @@ namespace App\Domain\Wallet\Projections{
  * 
  *
  * @property-read mixed $balance
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domain\Currency\Projections\Denomination> $denominations
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Domain\Wallet\Projections\Denomination> $denominations
  * @property-read int|null $denominations_count
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet newModelQuery()

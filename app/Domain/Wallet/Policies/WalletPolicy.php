@@ -2,7 +2,7 @@
 
 namespace App\Domain\Wallet\Policies;
 
-use App\Domain\Currency\Projections\Denomination;
+use App\Domain\Wallet\Projections\Denomination;
 use App\Domain\Wallet\Projections\Wallet;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;

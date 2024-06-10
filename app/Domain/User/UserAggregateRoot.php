@@ -7,7 +7,7 @@ use App\Domain\User\Events\UserRegistered;
 use App\Domain\User\Exceptions\UserAlreadyRegisteredException;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
-class UserAggregate extends AggregateRoot
+class UserAggregateRoot extends AggregateRoot
 {
     private bool $created = false;
 

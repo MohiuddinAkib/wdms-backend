@@ -10,7 +10,7 @@ use App\Domain\Wallet\Resources\DeleteWalletResponseResource;
 use App\Domain\Wallet\Resources\WalletDetailsResponseResource;
 use App\Domain\Wallet\Resources\WalletListResponseResource;
 use App\Domain\Wallet\Resources\WalletResource;
-use App\Domain\Wallet\WalletAggregate;
+use App\Domain\Wallet\WalletAggregateRoot;
 use App\Models\User;
 use Brick\Math\BigDecimal;
 use Cache;
@@ -48,7 +48,7 @@ class WalletController extends Controller
     {
         $walletId = (string) Str::uuid();
 
-        WalletAggregate::retrieve($walletId)
+        WalletAggregateRoot::retrieve($walletId)
             ->createWallet(auth()->user()->uuid, $data->currency)
             ->persist();
 
@@ -95,7 +95,7 @@ class WalletController extends Controller
         // WILL NOT ALLOW TO DELETE WALLET WITH BALANCE
         throw_if(BigDecimal::of($wallet->balance)->compareTo(0) > 0, WalletBalanceNotEmptyException::class);
 
-        WalletAggregate::retrieve($wallet->getKey())
+        WalletAggregateRoot::retrieve($wallet->getKey())
             ->deleteWallet()
             ->persist();
 

@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('uuid')->primary();
+            $table->foreignUuid('denomination_id')->constrained('denominations', 'uuid');
+            $table->string('type');
+            $table->unsignedInteger('quantity');
+            $table->dateTime('happened_at'); 
             $table->timestamps();
         });
     }

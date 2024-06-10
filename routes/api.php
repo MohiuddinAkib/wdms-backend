@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\DenominationController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WalletDenominationController;
 use Illuminate\Support\Facades\Route;
@@ -48,5 +49,13 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('denominations/{denomination}', 'destroy')
                 ->name('destroy')
                 ->can('remove-wallet-denomination', 'wallet,denomination');
+        });
+
+    Route::controller(TransactionController::class)
+        ->prefix('transactions/{wallet}')
+        ->name('transactions.')
+        ->group(function() {
+            Route::post('/', 'store')->name('store')
+            ->can('update-wallet', 'wallet');
         });
 });

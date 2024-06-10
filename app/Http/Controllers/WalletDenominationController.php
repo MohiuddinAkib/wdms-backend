@@ -2,25 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Currency\Projections\Denomination;
+use App\Domain\Wallet\Projections\Denomination;
 use App\Domain\Wallet\Dto\AddWalletDenominationData;
+use App\Domain\Wallet\Dto\AddWalletDenominationRequestData;
 use App\Domain\Wallet\Dto\RemoveWalletDenominationData;
 use App\Domain\Wallet\Exceptions\WalletDenominationBalanceExistsException;
 use App\Domain\Wallet\Projections\Wallet;
 use App\Domain\Wallet\Resources\AddWalletDenominationResponseResource;
 use App\Domain\Wallet\Resources\DeleteWalletDenominationResponseResource;
 use App\Domain\Wallet\Resources\WalletResource;
-use App\Domain\Wallet\WalletAggregate;
+use App\Domain\Wallet\WalletAggregateRoot;
 use Cache;
 use Str;
 
 class WalletDenominationController extends Controller
 {
-    public function store(Wallet $wallet, AddWalletDenominationData $data): AddWalletDenominationResponseResource
+    public function store(Wallet $wallet, AddWalletDenominationRequestData $data): AddWalletDenominationResponseResource
     {
         $denominationId = (string) Str::uuid();
-        WalletAggregate::retrieve($wallet->getKey())
-            ->addDenomination($denominationId, $data)
+        WalletAggregateRoot::retrieve($wallet->getKey())
+            ->addWalletDenomination(new AddWalletDenominationData(
+                denominationId: $denominationId,
+                name: $data->name,
+                value: $data->value,
+                type: $data->type,
+            ))
             ->persist();
 
         // Invalidate wallet cache due to mutation
@@ -38,7 +44,7 @@ class WalletDenominationController extends Controller
     {
         throw_if($denomination->quantity > 0, WalletDenominationBalanceExistsException::class);
 
-        WalletAggregate::retrieve($wallet->getKey())
+        WalletAggregateRoot::retrieve($wallet->getKey())
             ->removeDenomination(
                 new RemoveWalletDenominationData(
                     $denomination->getKey(),

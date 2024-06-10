@@ -9,7 +9,7 @@ use App\Domain\Auth\Notifications\LoginOtpNotification;
 use App\Domain\Auth\Resources\LoginUserResponseResource;
 use App\Domain\Auth\Resources\RegisterUserResponseResource;
 use App\Domain\Auth\Resources\RequestOtpResponseResource;
-use App\Domain\User\UserAggregate;
+use App\Domain\User\UserAggregateRoot;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,7 +24,7 @@ class AuthController extends Controller
     {
         $userUuid = (string) Str::uuid();
 
-        UserAggregate::retrieve($userUuid)
+        UserAggregateRoot::retrieve($userUuid)
             ->register($data)
             ->persist();
 

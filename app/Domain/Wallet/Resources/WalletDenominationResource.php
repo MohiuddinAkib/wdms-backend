@@ -2,7 +2,7 @@
 
 namespace App\Domain\Wallet\Resources;
 
-use App\Domain\Currency\Projections\Denomination;
+use App\Domain\Wallet\Projections\Denomination;
 use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 use Spatie\LaravelData\Resource;
@@ -14,6 +14,7 @@ class WalletDenominationResource extends Resource
         public string $id,
         public string $name,
         public string $type,
+        public float|int $value,
         public int $quantity
     ) {
 
@@ -25,6 +26,7 @@ class WalletDenominationResource extends Resource
             id: $denomination->getKey(),
             name: $denomination->name,
             type: $denomination->type,
+            value: $denomination->value,
             quantity: $denomination->quantity
         );
     }
