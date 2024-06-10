@@ -21,6 +21,16 @@ class WalletPolicy
         return true;
     }
 
+    public function show(User $user, Wallet $wallet): bool|Response
+    {
+        if($wallet->user->isNot($user))
+        {
+            return Response::denyAsNotFound();
+        }
+
+        return true;
+    }
+
     /**
      * Determine whether the user can delete the model.
      */

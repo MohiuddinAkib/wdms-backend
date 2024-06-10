@@ -19,7 +19,7 @@ class GetCurrenciesTest extends TestCase
             ],
         ]);
 
-        $response = $this->getJson(route('currency.index'));
+        $response = $this->getJson(route('currencies.index'));
 
         $response
             ->assertOk()

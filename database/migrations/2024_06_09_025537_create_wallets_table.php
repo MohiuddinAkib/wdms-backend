@@ -21,6 +21,9 @@ return new class extends Migration
             $table->unsignedSmallInteger('decimal_places')
                 ->default(2);
             $table->timestamps();
+
+            // DATABASE LEVEL CHECK FOR USER WALLETS WITH UNIQUE CURRENCY 
+            $table->unique(['user_id', 'currency']);
         });
     }
 

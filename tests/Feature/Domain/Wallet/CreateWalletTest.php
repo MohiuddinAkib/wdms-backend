@@ -16,7 +16,7 @@ class CreateWalletTest extends TestCase
 
     public function test_should_be_authenticated_to_create_wallet(): void
     {
-        $response = $this->postJson(route('wallet.store'), []);
+        $response = $this->postJson(route('wallets.store'), []);
 
         $response->assertUnauthorized();
     }
@@ -26,7 +26,7 @@ class CreateWalletTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $response = $this->postJson(route('wallet.store'), []);
+        $response = $this->postJson(route('wallets.store'), []);
 
         $response->assertUnprocessable()
             ->assertJsonValidationErrorFor('currency');
@@ -48,7 +48,7 @@ class CreateWalletTest extends TestCase
             ],
         ]);
 
-        $response = $this->postJson(route('wallet.store'), [
+        $response = $this->postJson(route('wallets.store'), [
             'currency' => $this->faker->randomAscii()
         ]);
 
@@ -74,7 +74,7 @@ class CreateWalletTest extends TestCase
             ],
         ]);
 
-        $response = $this->postJson(route('wallet.store'), [
+        $response = $this->postJson(route('wallets.store'), [
             'currency' => 'bdt'
         ]);
 
@@ -105,7 +105,7 @@ class CreateWalletTest extends TestCase
             ],
         ]);
 
-        $response = $this->postJson(route('wallet.store'), [
+        $response = $this->postJson(route('wallets.store'), [
             'currency' => 'bdt'
         ]);
 
@@ -120,7 +120,7 @@ class CreateWalletTest extends TestCase
             ]);
 
 
-            $response = $this->postJson(route('wallet.store'), [
+            $response = $this->postJson(route('wallets.store'), [
                 'currency' => 'bdt'
             ]);
     

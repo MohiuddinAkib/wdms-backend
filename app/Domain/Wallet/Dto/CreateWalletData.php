@@ -24,6 +24,7 @@ class CreateWalletData extends Data
                   $fail('Currency not supported');
               }
           },
+          // WILL ALLOW TO HAVE MULTIPLE WALLETS BUT EACH WALLET WITH ONE UNIQUE CURRENCY
           function(string $attribute, string $value, Closure $fail) use ($repository) {
             /** @var Wallet|null */
             $wallet = Wallet::where('currency', $value)->first();

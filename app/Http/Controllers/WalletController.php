@@ -7,6 +7,7 @@ use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
 use App\Domain\Wallet\Projections\Wallet;
 use App\Domain\Wallet\Resources\CreateWalletResponseResource;
 use App\Domain\Wallet\Resources\DeleteWalletResponseResource;
+use App\Domain\Wallet\Resources\WalletDetailsResponseResource;
 use App\Domain\Wallet\Resources\WalletResource;
 use App\Domain\Wallet\WalletAggregate;
 use Brick\Math\BigDecimal;
@@ -52,11 +53,20 @@ class WalletController extends Controller
         );
     }
 
+    public function show(Wallet $wallet): WalletDetailsResponseResource
+    {
+        return new WalletDetailsResponseResource(
+            true,
+            WalletResource::from($wallet)
+        );
+    }
+
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Wallet $wallet): DeleteWalletResponseResource
     {
+        // WILL NOT ALLOW TO DELETE WALLET WITH BALANCE
         throw_if(BigDecimal::of($wallet->balance)->compareTo(0) > 0, WalletBalanceNotEmptyException::class);
         
         WalletAggregate::retrieve($wallet->getKey())

@@ -91,7 +91,7 @@ class GetDenominationsTest extends TestCase
             ],
         ]);
 
-        $response = $this->getJson(route('denomination.index', 'bdt'));
+        $response = $this->getJson(route('denominations.index', 'bdt'));
 
         $response->assertOk()
             ->assertJson([
