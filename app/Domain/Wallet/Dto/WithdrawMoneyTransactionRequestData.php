@@ -10,24 +10,21 @@ use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
 #[MapName(SnakeCaseMapper::class)]
-class AddMoneyTransactionRequestData extends Data
+class WithdrawMoneyTransactionRequestData extends Data
 {
-    // WALLET UUID
     #[FromRouteParameterProperty('wallet')]
     public string $uuid;
 
-    /** @param array<AddMoneyTransactionItemRequestData> $denominations */
     public function __construct(
         #[Min(1)]
-        #[DataCollectionOf(AddMoneyTransactionItemRequestData::class)]
+        #[DataCollectionOf(WithdrawMoneyTransactionItemRequestData::class)]
         public array $denominations
-    ) {
-    }
+    ) {}
 
-    public static function rules($context)
+    public static function rules()
     {
         return [
             'denominations.*.denomination_id' => ['distinct:strict']
-        ];
+        ];   
     }
 }

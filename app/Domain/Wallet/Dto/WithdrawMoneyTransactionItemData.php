@@ -5,7 +5,7 @@ namespace App\Domain\Wallet\Dto;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
 
-class AddMoneyTransactionItemData
+class WithdrawMoneyTransactionItemData
 {
     public function __construct(
         public string $transactionId,

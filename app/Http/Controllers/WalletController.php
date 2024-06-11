@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Wallet\Dto\CreateWalletData;
+use App\Domain\Wallet\Dto\CreateWalletRequestData;
 use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
 use App\Domain\Wallet\Projections\Wallet;
 use App\Domain\Wallet\Resources\CreateWalletResponseResource;
@@ -44,7 +44,7 @@ class WalletController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CreateWalletData $data): CreateWalletResponseResource
+    public function store(CreateWalletRequestData $data): CreateWalletResponseResource
     {
         $walletId = (string) Str::uuid();
 

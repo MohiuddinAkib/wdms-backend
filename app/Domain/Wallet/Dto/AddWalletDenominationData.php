@@ -2,9 +2,8 @@
 
 namespace App\Domain\Wallet\Dto;
 
-use Spatie\LaravelData\Data;
 
-class AddWalletDenominationData extends Data
+class AddWalletDenominationData
 {
     public function __construct(
         public string $denominationId,

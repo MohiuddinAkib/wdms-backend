@@ -24,6 +24,7 @@ class AddMoneyTransactionItemRequestData extends Data
         return [
             'denomination_id' => [
                 'required',
+                'distinct',
                 Rule::exists(Denomination::class, 'uuid')
                     ->where(fn (Builder $query) => $query->where('wallet_id', $context->fullPayload['uuid'])),
             ],

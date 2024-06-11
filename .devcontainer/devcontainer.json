@@ -9,7 +9,8 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"st-pham.php-refactor-tool"
+				"st-pham.php-refactor-tool",
+				"Cardinal90.multi-cursor-case-preserve"
 			],
 			"settings": {}
 		}

@@ -5,11 +5,14 @@ namespace App\Domain\Wallet;
 use App\Domain\Wallet\Dto\AddMoneyTransactionData;
 use App\Domain\Wallet\Dto\AddWalletDenominationData;
 use App\Domain\Wallet\Dto\RemoveWalletDenominationData;
+use App\Domain\Wallet\Dto\WithdrawMoneyTransactionData;
 use App\Domain\Wallet\Events\MoneyAdded;
+use App\Domain\Wallet\Events\MoneyWithdrawn;
 use App\Domain\Wallet\Events\WalletCreated;
 use App\Domain\Wallet\Events\WalletDeleted;
 use App\Domain\Wallet\Events\WalletDenominationAdded;
 use App\Domain\Wallet\Events\WalletDenominationRemoved;
+use App\Domain\Wallet\Exceptions\NotSufficientBalanceException;
 use App\Domain\Wallet\Exceptions\UnknownDenominationException;
 use App\Domain\Wallet\Exceptions\WalletAlreadyExistsException;
 use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
@@ -121,7 +124,6 @@ class WalletAggregateRoot extends AggregateRoot
 
         // CHECKING IF THE DENOMINATION HAS BALANCE
         throw_if($data->quantity > 0, WalletDenominationBalanceExistsException::class);
-
         $this->recordThat(new WalletDenominationRemoved(
             denominationId: $data->denominationId
         ));
@@ -144,6 +146,26 @@ class WalletAggregateRoot extends AggregateRoot
     {
         $this->balance = (string) BigDecimal::of($this->balance)
             ->plus($event->transactionData->total())
+            ->toScale(2, RoundingMode::DOWN);
+    }
+
+    public function withdrawMoney(WithdrawMoneyTransactionData $data): self
+    {
+        throw_if(BigDecimal::of($this->balance)->compareTo(0) <= 0, NotSufficientBalanceException::class);
+
+        $this->recordThat(new MoneyWithdrawn(
+            walletId: $this->uuid(),
+            transactionData: $data,
+            happenedAt: now()
+        ));
+
+        return $this;
+    }
+
+    protected function applyMoneyWithdrawn(MoneyWithdrawn $event)
+    {
+        $this->balance = (string) BigDecimal::of($this->balance)
+            ->minus($event->transactionData->total())
             ->toScale(2, RoundingMode::DOWN);
     }
 }

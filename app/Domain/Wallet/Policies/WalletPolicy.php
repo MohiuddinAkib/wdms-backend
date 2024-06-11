@@ -5,6 +5,7 @@ namespace App\Domain\Wallet\Policies;
 use App\Domain\Wallet\Projections\Denomination;
 use App\Domain\Wallet\Projections\Wallet;
 use App\Models\User;
+use Brick\Math\BigDecimal;
 use Illuminate\Auth\Access\Response;
 
 class WalletPolicy
@@ -51,6 +52,21 @@ class WalletPolicy
         if ($denomination->quantity > 0) {
             return Response::deny('The denomination balance is not empty.');
         }
+
+        return true;
+    }
+
+    public function withdraw(User $user, Wallet $wallet): bool|Response
+    {
+        if ($wallet->user->isNot($user)) {
+            return Response::denyAsNotFound();
+        }
+
+        if(BigDecimal::of($wallet->balance)->compareTo(0) <= 0){
+            return Response::deny('Not enough balance.');
+        }
+
+        
 
         return true;
     }

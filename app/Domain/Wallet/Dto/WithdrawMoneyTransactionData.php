@@ -5,9 +5,9 @@ namespace App\Domain\Wallet\Dto;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
 
-class AddMoneyTransactionData
+class WithdrawMoneyTransactionData
 {
-    /** @param array<AddMoneyTransactionItemData> $denominations */
+    /** @param array<WithdrawMoneyTransactionItemData> $denominations */
     public function __construct(
         public string $walletUuid,
         public array $denominations
@@ -16,7 +16,7 @@ class AddMoneyTransactionData
 
     public function total()
     {
-        return collect($this->denominations)->reduce(function (string $carry, AddMoneyTransactionItemData $denomination) {
+        return collect($this->denominations)->reduce(function (string $carry, WithdrawMoneyTransactionItemData $denomination) {
             return (string) BigDecimal::of($carry)->plus($denomination->total())->toScale(2, RoundingMode::DOWN);
         }, '0');
     }

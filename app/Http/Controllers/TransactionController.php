@@ -7,14 +7,17 @@ use App\Domain\Wallet\Dto\AddMoneyTransactionData;
 use App\Domain\Wallet\Dto\AddMoneyTransactionItemData;
 use App\Domain\Wallet\Dto\AddMoneyTransactionItemRequestData;
 use App\Domain\Wallet\Dto\AddMoneyTransactionRequestData;
+use App\Domain\Wallet\Dto\WithdrawMoneyTransactionData;
+use App\Domain\Wallet\Dto\WithdrawMoneyTransactionItemData;
+use App\Domain\Wallet\Dto\WithdrawMoneyTransactionItemRequestData;
+use App\Domain\Wallet\Dto\WithdrawMoneyTransactionRequestData;
 use App\Domain\Wallet\Projections\Denomination;
-use App\Domain\Wallet\Projections\Transaction;
 use App\Domain\Wallet\Projections\Wallet;
+use App\Domain\Wallet\Resource\WithdrawMoneyTransactionResponseResource;
 use App\Domain\Wallet\Resources\AddMoneyTransactionResponseResource;
 use App\Domain\Wallet\Resources\WalletResource;
 use App\Domain\Wallet\WalletAggregateRoot;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
 use Str;
 
 class TransactionController extends Controller
@@ -28,17 +31,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Wallet $wallet, AddMoneyTransactionRequestData $data, CurrencyRepository $currencyRepository)
+    public function deposit(Wallet $wallet, AddMoneyTransactionRequestData $data, CurrencyRepository $currencyRepository)
     {
         $denominationIds = collect($data->denominations)
             ->map(fn (AddMoneyTransactionItemRequestData $denomination) => $denomination->denominationId)
@@ -53,10 +48,13 @@ class TransactionController extends Controller
             ->where('wallet_id', $wallet->getKey())
             ->get();
 
+        $transactionGroupId = (string) Str::uuid();
         $dtos = $denominations
-            ->map(function (Denomination $denomination) use ($denominationIdQuantityMapping) {
+            ->map(function (Denomination $denomination) use ($denominationIdQuantityMapping, $transactionGroupId) {
+                $transactionId = (string) Str::uuid();
                 return new AddMoneyTransactionItemData(
-                    (string) Str::uuid(),
+                    $transactionId,
+                    $transactionGroupId,
                     $denomination->getKey(),
                     $denomination->type,
                     $denomination->value,
@@ -82,34 +80,51 @@ class TransactionController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Transaction $transaction)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Transaction $transaction)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Transaction $transaction)
+    public function withdraw(Wallet $wallet, WithdrawMoneyTransactionRequestData $data)
     {
-        //
+        $denominationIds = collect($data->denominations)
+            ->map(fn (WithdrawMoneyTransactionItemRequestData $denomination) => $denomination->denominationId)
+            ->values();
+
+        $denominationIdQuantityMapping = collect($data->denominations)
+            ->mapWithKeys(fn (WithdrawMoneyTransactionItemRequestData $denomination) => [$denomination->denominationId => $denomination->quantity])
+            ->all();
+
+        /** @var Collection<int, Denomination> */
+        $denominations = Denomination::whereIn('uuid', $denominationIds)
+            ->where('wallet_id', $wallet->getKey())
+            ->get();
+
+            $transactionGroupId = (string) Str::uuid();
+            $dtos = $denominations
+            ->map(function (Denomination $denomination) use ($denominationIdQuantityMapping,  $transactionGroupId) {
+                $transactionId = (string) Str::uuid();
+                return new WithdrawMoneyTransactionItemData(
+                    $transactionId,
+                    $transactionGroupId,
+                    $denomination->getKey(),
+                    $denomination->type,
+                    $denomination->value,
+                    $denominationIdQuantityMapping[$denomination->getKey()]
+                );
+            })
+            ->values();
+
+            WalletAggregateRoot::retrieve($wallet->getKey())
+                ->withDrawMoney(new WithdrawMoneyTransactionData(
+                    $wallet->getKey(),
+                    $dtos->all()
+                ))
+                ->persist();
+
+            $wallet->refresh();
+
+            return new WithdrawMoneyTransactionResponseResource(
+                true,
+                'Withdraw successful.',
+                WalletResource::from($wallet)
+            );
     }
 }

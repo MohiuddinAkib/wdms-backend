@@ -31,7 +31,18 @@ class Wallet extends Projection
             ->plus(BigDecimal::of($this->balance))
             ->toScale(2, RoundingMode::DOWN);
 
-        $this->writeable()->update([
+        $this->update([
+            'balance' => $result,
+        ]);
+    }
+
+    public function withdraw(float|int|string $amount)
+    {
+        $result = BigDecimal::of($amount)
+            ->minus(BigDecimal::of($this->balance))
+            ->toScale(2, RoundingMode::DOWN);
+
+        $this->update([
             'balance' => $result,
         ]);
     }

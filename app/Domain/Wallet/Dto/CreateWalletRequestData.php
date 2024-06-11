@@ -9,7 +9,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Data;
 
-class CreateWalletData extends Data
+class CreateWalletRequestData extends Data
 {
     public function __construct(
         public string $currency

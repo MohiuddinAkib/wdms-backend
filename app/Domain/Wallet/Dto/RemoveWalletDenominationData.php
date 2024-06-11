@@ -4,7 +4,7 @@ namespace App\Domain\Wallet\Dto;
 
 use Spatie\LaravelData\Data;
 
-class RemoveWalletDenominationData extends Data
+class RemoveWalletDenominationData
 {
     public function __construct(
         public readonly string $denominationId,
