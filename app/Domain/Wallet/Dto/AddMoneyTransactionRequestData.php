@@ -27,7 +27,7 @@ class AddMoneyTransactionRequestData extends Data
     public static function rules($context)
     {
         return [
-            'denominations.*.denomination_id' => ['distinct:strict']
+            'denominations.*.denomination_id' => ['distinct:strict'],
         ];
     }
 }

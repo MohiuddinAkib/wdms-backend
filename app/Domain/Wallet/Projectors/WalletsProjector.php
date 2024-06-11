@@ -61,7 +61,7 @@ class WalletsProjector extends Projector
                 Transaction::new()->writeable()->create([
                     'uuid' => $denomination->transactionId,
                     'wallet_id' => $event->walletId,
-                    'group_id'=> $denomination->transactionGroupId,
+                    'group_id' => $denomination->transactionGroupId,
                     'denomination_id' => $denomination->denominationId,
                     'type' => 'add',
                     'quantity' => $denomination->quantity,
@@ -90,7 +90,7 @@ class WalletsProjector extends Projector
                 Transaction::new()->writeable()->create([
                     'uuid' => $denomination->transactionId,
                     'wallet_id' => $event->walletId,
-                    'group_id'=> $denomination->transactionGroupId,
+                    'group_id' => $denomination->transactionGroupId,
                     'denomination_id' => $denomination->denominationId,
                     'type' => 'withdraw',
                     'quantity' => $denomination->quantity,

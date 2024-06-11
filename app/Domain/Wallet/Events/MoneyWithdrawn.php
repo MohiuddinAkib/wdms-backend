@@ -12,7 +12,6 @@ class MoneyWithdrawn extends ShouldBeStored
         public string $walletId,
         public WithdrawMoneyTransactionData $transactionData,
         public Carbon $happenedAt
-    )
-    {
+    ) {
     }
 }

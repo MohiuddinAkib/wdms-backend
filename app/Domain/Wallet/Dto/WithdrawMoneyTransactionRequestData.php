@@ -19,12 +19,13 @@ class WithdrawMoneyTransactionRequestData extends Data
         #[Min(1)]
         #[DataCollectionOf(WithdrawMoneyTransactionItemRequestData::class)]
         public array $denominations
-    ) {}
+    ) {
+    }
 
     public static function rules()
     {
         return [
-            'denominations.*.denomination_id' => ['distinct:strict']
-        ];   
+            'denominations.*.denomination_id' => ['distinct:strict'],
+        ];
     }
 }

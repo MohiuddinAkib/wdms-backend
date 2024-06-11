@@ -62,11 +62,9 @@ class WalletPolicy
             return Response::denyAsNotFound();
         }
 
-        if(BigDecimal::of($wallet->balance)->compareTo(0) <= 0){
+        if (BigDecimal::of($wallet->balance)->compareTo(0) <= 0) {
             return Response::deny('Not enough balance.');
         }
-
-        
 
         return true;
     }

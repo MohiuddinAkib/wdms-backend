@@ -11,7 +11,7 @@ class NotSufficientBalanceException extends DomainException
 {
     public function __construct()
     {
-        parent::__construct("Not sufficient balance.");    
+        parent::__construct('Not sufficient balance.');
     }
 
     /**
@@ -21,7 +21,7 @@ class NotSufficientBalanceException extends DomainException
     {
         return response()->json([
             'success' => false,
-            'message' => $this->getMessage()
+            'message' => $this->getMessage(),
         ], Response::HTTP_BAD_REQUEST);
     }
 }

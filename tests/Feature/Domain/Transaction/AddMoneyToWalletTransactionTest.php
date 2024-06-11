@@ -222,7 +222,7 @@ class AddMoneyToWalletTransactionTest extends TestCase
             ->assertUnprocessable()
             ->assertJsonValidationErrors([
                 'denominations.0.denomination_id' => 'The denominations.0.denomination_id field has a duplicate value.',
-                'denominations.1.denomination_id' => 'The denominations.1.denomination_id field has a duplicate value.'
+                'denominations.1.denomination_id' => 'The denominations.1.denomination_id field has a duplicate value.',
             ]);
     }
 
@@ -284,7 +284,7 @@ class AddMoneyToWalletTransactionTest extends TestCase
                     'id' => $wallet->getKey(),
                     'currency' => 'bdt',
                     'balance' => '35.29',
-                   
+
                 ],
             ]);
 

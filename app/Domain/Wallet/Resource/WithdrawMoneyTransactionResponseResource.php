@@ -10,13 +10,14 @@ use Spatie\LaravelData\Resource;
 class WithdrawMoneyTransactionResponseResource extends Resource
 {
     public function __construct(
-      public bool $success,
-      public string $message,
-      public WalletResource $data
-    ) {}
+        public bool $success,
+        public string $message,
+        public WalletResource $data
+    ) {
+    }
 
     protected function calculateResponseStatus(Request $request): int
     {
-      return Response::HTTP_OK;
+        return Response::HTTP_OK;
     }
 }

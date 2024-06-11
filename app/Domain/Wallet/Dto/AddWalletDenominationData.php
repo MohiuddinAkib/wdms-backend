@@ -2,7 +2,6 @@
 
 namespace App\Domain\Wallet\Dto;
 
-
 class AddWalletDenominationData
 {
     public function __construct(

@@ -14,24 +14,25 @@ use Spatie\LaravelData\Support\Validation\ValidationContext;
 class WithdrawMoneyTransactionItemRequestData extends Data
 {
     public function __construct(
-      public string $denominationId,
-      public int $quantity,
-    ) {}
+        public string $denominationId,
+        public int $quantity,
+    ) {
+    }
 
     public static function rules(ValidationContext $context)
     {
-      return [
-        'denomination_id' => ['required', Rule::exists(Denomination::class, 'uuid')->where('wallet_id', $context->fullPayload['uuid'])],
-        'quantity' => ['required', 'integer', 'min:1', function(string $attribute, int $value, Closure $fail) use($context) {
-            $denomination = Denomination::where('wallet_id', $context->fullPayload['uuid'])
-              ->find($context->payload['denomination_id']);
+        return [
+            'denomination_id' => ['required', Rule::exists(Denomination::class, 'uuid')->where('wallet_id', $context->fullPayload['uuid'])],
+            'quantity' => ['required', 'integer', 'min:1', function (string $attribute, int $value, Closure $fail) use ($context) {
+                $denomination = Denomination::where('wallet_id', $context->fullPayload['uuid'])
+                    ->find($context->payload['denomination_id']);
 
-            if(!is_null($denomination)) {
-              if($denomination->quantity < $value) {
-                $fail('Not enough balance.');
-              }
-            }
-        }]
-      ];
+                if (! is_null($denomination)) {
+                    if ($denomination->quantity < $value) {
+                        $fail('Not enough balance.');
+                    }
+                }
+            }],
+        ];
     }
 }

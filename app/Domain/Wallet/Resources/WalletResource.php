@@ -26,7 +26,7 @@ class WalletResource extends Resource
             $wallet->getKey(),
             $wallet->currency,
             (string) $wallet->balance,
-            Lazy::create(fn() => WalletDenominationResource::collect($wallet->denominations)->all())->defaultIncluded()
+            Lazy::create(fn () => WalletDenominationResource::collect($wallet->denominations)->all())->defaultIncluded()
         );
     }
 }

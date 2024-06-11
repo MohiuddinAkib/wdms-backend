@@ -22,7 +22,7 @@ use App\Domain\Wallet\WalletAggregateRoot;
 use Cache;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\AbstractPaginator;
 use Spatie\LaravelData\DataCollection;
 use Str;
 
@@ -31,7 +31,7 @@ class TransactionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, TransactionIndexQuery $query): LengthAwarePaginator|DataCollection
+    public function index(Request $request, TransactionIndexQuery $query): AbstractPaginator|DataCollection
     {
         $cacheKey = $request->cacheKey();
 
@@ -39,7 +39,7 @@ class TransactionController extends Controller
             ->remember(
                 $cacheKey,
                 now()->addMinutes(5),
-                fn() => TransactionResource::collect($query->paginate())
+                fn () => TransactionResource::collect($query->paginate())
             );
     }
 
@@ -65,6 +65,7 @@ class TransactionController extends Controller
         $dtos = $denominations
             ->map(function (Denomination $denomination) use ($denominationIdQuantityMapping, $transactionGroupId) {
                 $transactionId = (string) Str::uuid();
+
                 return new AddMoneyTransactionItemData(
                     $transactionId,
                     $transactionGroupId,
@@ -115,10 +116,11 @@ class TransactionController extends Controller
             ->where('wallet_id', $wallet->getKey())
             ->get();
 
-            $transactionGroupId = (string) Str::uuid();
-            $dtos = $denominations
-            ->map(function (Denomination $denomination) use ($denominationIdQuantityMapping,  $transactionGroupId) {
+        $transactionGroupId = (string) Str::uuid();
+        $dtos = $denominations
+            ->map(function (Denomination $denomination) use ($denominationIdQuantityMapping, $transactionGroupId) {
                 $transactionId = (string) Str::uuid();
+
                 return new WithdrawMoneyTransactionItemData(
                     $transactionId,
                     $transactionGroupId,
@@ -130,24 +132,24 @@ class TransactionController extends Controller
             })
             ->values();
 
-            WalletAggregateRoot::retrieve($wallet->getKey())
-                ->withDrawMoney(new WithdrawMoneyTransactionData(
-                    $wallet->getKey(),
-                    $dtos->all()
-                ))
-                ->persist();
-            
-            // INVALIDATE ALL TRANSACTION CACHE FOR THIS USER
-            Cache::tags(['transactions', auth()->id()])->flush();
-            // INVALIDATE ALL WALLET CACHE FOR THIS USER
-            Cache::tags(['wallets', auth()->id()])->flush();
+        WalletAggregateRoot::retrieve($wallet->getKey())
+            ->withDrawMoney(new WithdrawMoneyTransactionData(
+                $wallet->getKey(),
+                $dtos->all()
+            ))
+            ->persist();
 
-            $wallet->refresh();
+        // INVALIDATE ALL TRANSACTION CACHE FOR THIS USER
+        Cache::tags(['transactions', auth()->id()])->flush();
+        // INVALIDATE ALL WALLET CACHE FOR THIS USER
+        Cache::tags(['wallets', auth()->id()])->flush();
 
-            return new WithdrawMoneyTransactionResponseResource(
-                true,
-                'Withdraw successful.',
-                WalletResource::from($wallet)
-            );
+        $wallet->refresh();
+
+        return new WithdrawMoneyTransactionResponseResource(
+            true,
+            'Withdraw successful.',
+            WalletResource::from($wallet)
+        );
     }
 }

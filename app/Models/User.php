@@ -57,7 +57,6 @@ class User extends Authenticatable
         return $this->hasMany(Wallet::class, localKey: 'uuid');
     }
 
-    
     public function transactions(): HasManyThrough
     {
         return $this->hasManyThrough(Transaction::class, Wallet::class, 'user_id', 'wallet_id', 'uuid', 'uuid');

@@ -19,7 +19,6 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    
     public function test_should_be_authenticated_to_withdraw_money(): void
     {
         $user = User::factory()->create();
@@ -28,7 +27,7 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
             ->withBalance('0')
             ->withCurrency('bdt')
             ->create();
-            
+
         $response = $this->postJson(route('transactions.withdraw', $wallet->getKey()), [
 
         ]);
@@ -47,14 +46,13 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
 
         $user2 = User::factory()->create();
         Sanctum::actingAs($user2);
-            
+
         $response = $this->postJson(route('transactions.withdraw', $wallet->getKey()), [
 
         ]);
 
         $response->assertNotFound();
     }
-
 
     public function test_should_have_enough_wallet_balance_to_withdraw_money(): void
     {
@@ -90,8 +88,8 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
             'denominations' => [
                 [
 
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $response->assertUnprocessable()
@@ -116,8 +114,8 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
                 [
                     'denomination_id' => (string) Str::uuid(),
                     'quantity' => 1,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $response->assertUnprocessable()
@@ -139,7 +137,7 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
         $denominationId2 = (string) Str::uuid();
         $denominationId3 = (string) Str::uuid();
 
-         WalletAggregateRoot::retrieve($wallet->getKey())
+        WalletAggregateRoot::retrieve($wallet->getKey())
             ->addWalletDenomination(new AddWalletDenominationData(
                 $denominationId1,
                 '5 taka',
@@ -162,7 +160,107 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
 
         $transactionGrpId = (string) Str::uuid();
         WalletAggregateRoot::retrieve($wallet->getKey())
-                ->addMoney(new AddMoneyTransactionData(
+            ->addMoney(new AddMoneyTransactionData(
+                $wallet->getKey(),
+                [
+                    new AddMoneyTransactionItemData(
+                        (string) Str::uuid(),
+                        $transactionGrpId,
+                        $denominationId1,
+                        'bill',
+                        5,
+                        5
+                    ),
+                    new AddMoneyTransactionItemData(
+                        (string) Str::uuid(),
+                        $transactionGrpId,
+                        $denominationId2,
+                        'bill',
+                        10,
+                        10
+                    ),
+                    new AddMoneyTransactionItemData(
+                        (string) Str::uuid(),
+                        $transactionGrpId,
+                        $denominationId3,
+                        'coin',
+                        0.05,
+                        100
+                    ),
+                ]
+            ))
+            ->persist();
+
+        Sanctum::actingAs($user);
+
+        $response = $this->postJson(route('transactions.withdraw', $wallet->getKey()), [
+            'denominations' => [
+                [
+                    'denomination_id' => $denominationId1,
+                    'quantity' => 15,
+                ],
+                [
+                    'denomination_id' => $denominationId2,
+                    'quantity' => 10,
+                ],
+                [
+                    'denomination_id' => $denominationId3,
+                    'quantity' => 50,
+                ],
+                [
+                    'denomination_id' => $denominationId3,
+                    'quantity' => 15,
+                ],
+            ],
+        ]);
+
+        $response->assertUnprocessable()
+            ->assertJsonValidationErrors([
+                'denominations.0.quantity' => 'Not enough balance',
+                'denominations.2.denomination_id' => 'The denominations.2.denomination_id field has a duplicate value.',
+                'denominations.3.denomination_id' => 'The denominations.3.denomination_id field has a duplicate value.',
+            ]);
+    }
+
+    public function test_should_reduce_wallet_balance_and_denomination_quantity_after_withdrawing_money(): void
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create();
+        $wallet = WalletFactory::new()
+            ->withUserUuid($user->uuid)
+            ->withBalance('0')
+            ->withCurrency('bdt')
+            ->create();
+
+        $denominationId1 = (string) Str::uuid();
+        $denominationId2 = (string) Str::uuid();
+        $denominationId3 = (string) Str::uuid();
+
+        WalletAggregateRoot::retrieve($wallet->getKey())
+            ->addWalletDenomination(new AddWalletDenominationData(
+                $denominationId1,
+                '5 taka',
+                5,
+                'bill'
+            ))
+            ->addWalletDenomination(new AddWalletDenominationData(
+                $denominationId2,
+                '10 taka',
+                10,
+                'bill'
+            ))
+            ->addWalletDenomination(new AddWalletDenominationData(
+                $denominationId3,
+                '5 poisha',
+                0.05,
+                'coin'
+            ))
+            ->persist();
+
+        $transactionGrpId = (string) Str::uuid();
+        WalletAggregateRoot::retrieve($wallet->getKey())
+            ->addMoney(
+                new AddMoneyTransactionData(
                     $wallet->getKey(),
                     [
                         new AddMoneyTransactionItemData(
@@ -188,129 +286,29 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
                             'coin',
                             0.05,
                             100
-                        )
+                        ),
                     ]
-                ))
-                ->persist();
-
-        Sanctum::actingAs($user);
-
-        $response = $this->postJson(route('transactions.withdraw', $wallet->getKey()), [
-                'denominations' => [
-                    [
-                        'denomination_id' => $denominationId1,
-                        'quantity' => 15,
-                    ],
-                    [
-                        'denomination_id' => $denominationId2,
-                        'quantity' => 10,
-                    ],
-                    [
-                        'denomination_id' => $denominationId3,
-                        'quantity' => 50,
-                    ],
-                    [
-                        'denomination_id' => $denominationId3,
-                        'quantity' => 15,
-                    ]
-                ]
-        ]);
-
-        $response->assertUnprocessable()
-            ->assertJsonValidationErrors([
-                'denominations.0.quantity' => 'Not enough balance',
-                'denominations.2.denomination_id' => 'The denominations.2.denomination_id field has a duplicate value.',
-                'denominations.3.denomination_id' => 'The denominations.3.denomination_id field has a duplicate value.',
-            ]);
-    }
-
-    public function test_should_reduce_wallet_balance_and_denomination_quantity_after_withdrawing_money(): void
-    {
-        $this->withoutExceptionHandling();
-        $user = User::factory()->create();
-        $wallet = WalletFactory::new()
-            ->withUserUuid($user->uuid)
-            ->withBalance('0')
-            ->withCurrency('bdt')
-            ->create();
-
-        $denominationId1 = (string) Str::uuid();
-        $denominationId2 = (string) Str::uuid();
-        $denominationId3 = (string) Str::uuid();
-
-         WalletAggregateRoot::retrieve($wallet->getKey())
-            ->addWalletDenomination(new AddWalletDenominationData(
-                $denominationId1,
-                '5 taka',
-                5,
-                'bill'
-            ))
-            ->addWalletDenomination(new AddWalletDenominationData(
-                $denominationId2,
-                '10 taka',
-                10,
-                'bill'
-            ))
-            ->addWalletDenomination(new AddWalletDenominationData(
-                $denominationId3,
-                '5 poisha',
-                0.05,
-                'coin'
-            ))
-            ->persist();
-        
-        $transactionGrpId = (string) Str::uuid();
-        WalletAggregateRoot::retrieve($wallet->getKey())
-                ->addMoney(
-                    new AddMoneyTransactionData(
-                        $wallet->getKey(),
-                        [
-                            new AddMoneyTransactionItemData(
-                                (string) Str::uuid(),
-                                $transactionGrpId,
-                                $denominationId1,
-                                'bill',
-                                5,
-                                5
-                            ),
-                            new AddMoneyTransactionItemData(
-                                (string) Str::uuid(),
-                                $transactionGrpId,
-                                $denominationId2,
-                                'bill',
-                                10,
-                                10
-                            ),
-                            new AddMoneyTransactionItemData(
-                                (string) Str::uuid(),
-                                $transactionGrpId,
-                                $denominationId3,
-                                'coin',
-                                0.05,
-                                100
-                            )
-                        ]
-                    )
                 )
-                ->persist();
+            )
+            ->persist();
 
         Sanctum::actingAs($user);
 
         $response = $this->postJson(route('transactions.withdraw', $wallet->getKey()), [
-                'denominations' => [
-                    [
-                        'denomination_id' => $denominationId1,
-                        'quantity' => 5,
-                    ],
-                    [
-                        'denomination_id' => $denominationId2,
-                        'quantity' => 10,
-                    ],
-                    [
-                        'denomination_id' => $denominationId3,
-                        'quantity' => 100,
-                    ]
-                ]
+            'denominations' => [
+                [
+                    'denomination_id' => $denominationId1,
+                    'quantity' => 5,
+                ],
+                [
+                    'denomination_id' => $denominationId2,
+                    'quantity' => 10,
+                ],
+                [
+                    'denomination_id' => $denominationId3,
+                    'quantity' => 100,
+                ],
+            ],
         ]);
 
         $response->assertOk()
@@ -321,7 +319,7 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
                     'id' => $wallet->getKey(),
                     'currency' => $wallet->currency,
                     'balance' => '0.00',
-                ]
+                ],
             ]);
 
         $response->assertJsonFragment([
@@ -343,7 +341,7 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
         ]);
 
         $this->assertDatabaseHas(Transaction::class, [
-            'type' => 'withdraw'
+            'type' => 'withdraw',
         ]);
     }
 }

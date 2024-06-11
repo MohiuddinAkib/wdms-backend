@@ -7,11 +7,12 @@ use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class TransactionIndexQuery extends QueryBuilder {
+class TransactionIndexQuery extends QueryBuilder
+{
     public function __construct(Request $request)
     {
         /** @var User */
-        $user =  $request->user();
+        $user = $request->user();
         $query = $user->transactions()->getQuery();
 
         parent::__construct($query, $request);

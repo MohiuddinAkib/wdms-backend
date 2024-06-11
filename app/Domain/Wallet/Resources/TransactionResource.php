@@ -18,17 +18,18 @@ class TransactionResource extends Resource
         public string $type,
         public int $quantity,
         public Carbon $happenedAt,
-    ) {}
+    ) {
+    }
 
     public static function fromModel(Transaction $transaction): self
     {
         return new self(
-          $transaction->getKey(),
-          WalletResource::from($transaction->wallet)->exclude('denominations'),
-          WalletDenominationResource::from($transaction->denomination),
-          $transaction->type,
-          $transaction->quantity,
-          $transaction->happened_at,
-        );      
+            $transaction->getKey(),
+            WalletResource::from($transaction->wallet)->exclude('denominations'),
+            WalletDenominationResource::from($transaction->denomination),
+            $transaction->type,
+            $transaction->quantity,
+            $transaction->happened_at,
+        );
     }
 }

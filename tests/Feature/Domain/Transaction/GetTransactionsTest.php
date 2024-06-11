@@ -71,10 +71,10 @@ class GetTransactionsTest extends TestCase
                         'bill',
                         20,
                         10
-                    )
+                    ),
                 ]
             ))
-             ->addMoney(new AddMoneyTransactionData(
+            ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
                 [
                     new AddMoneyTransactionItemData(
@@ -84,7 +84,7 @@ class GetTransactionsTest extends TestCase
                         'bill',
                         100,
                         12
-                    )
+                    ),
                 ]
             ))
             ->addMoney(new AddMoneyTransactionData(
@@ -97,7 +97,7 @@ class GetTransactionsTest extends TestCase
                         'bill',
                         20,
                         12
-                    )
+                    ),
                 ]
             ))
             ->withdrawMoney(new WithdrawMoneyTransactionData(
@@ -110,7 +110,7 @@ class GetTransactionsTest extends TestCase
                         'bill',
                         100,
                         55
-                    )
+                    ),
                 ]
             ))
             ->persist();
@@ -123,10 +123,10 @@ class GetTransactionsTest extends TestCase
                     [
                         'wallet' => [
                             'id' => $wallet->getKey(),
-                            'balance' => '6140.00'
-                        ]
-                    ]
-                ]
+                            'balance' => '6140.00',
+                        ],
+                    ],
+                ],
             ]);
     }
 
@@ -173,10 +173,10 @@ class GetTransactionsTest extends TestCase
                         'bill',
                         20,
                         10
-                    )
+                    ),
                 ]
             ))
-             ->addMoney(new AddMoneyTransactionData(
+            ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
                 [
                     new AddMoneyTransactionItemData(
@@ -186,7 +186,7 @@ class GetTransactionsTest extends TestCase
                         'bill',
                         100,
                         12
-                    )
+                    ),
                 ]
             ))
             ->addMoney(new AddMoneyTransactionData(
@@ -199,7 +199,7 @@ class GetTransactionsTest extends TestCase
                         'bill',
                         20,
                         12
-                    )
+                    ),
                 ]
             ))
             ->withdrawMoney(new WithdrawMoneyTransactionData(
@@ -212,15 +212,15 @@ class GetTransactionsTest extends TestCase
                         'bill',
                         100,
                         55
-                    )
+                    ),
                 ]
             ))
             ->persist();
 
         $response = $this->getJson(route('transactions.index', [
-            'filter' =>[
-                'happened_at_between' => now()->subMinutes(1) . ',' . now()
-            ]
+            'filter' => [
+                'happened_at_between' => now()->subMinutes(1).','.now(),
+            ],
         ]));
 
         $response->assertOk()
@@ -229,10 +229,10 @@ class GetTransactionsTest extends TestCase
                     [
                         'wallet' => [
                             'id' => $wallet->getKey(),
-                            'balance' => '6140.00'
-                        ]
-                    ]
-                ]
+                            'balance' => '6140.00',
+                        ],
+                    ],
+                ],
             ]);
     }
 
@@ -279,10 +279,10 @@ class GetTransactionsTest extends TestCase
                         'bill',
                         20,
                         10
-                    )
+                    ),
                 ]
             ))
-             ->addMoney(new AddMoneyTransactionData(
+            ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
                 [
                     new AddMoneyTransactionItemData(
@@ -292,7 +292,7 @@ class GetTransactionsTest extends TestCase
                         'bill',
                         100,
                         12
-                    )
+                    ),
                 ]
             ))
             ->addMoney(new AddMoneyTransactionData(
@@ -305,7 +305,7 @@ class GetTransactionsTest extends TestCase
                         'bill',
                         20,
                         12
-                    )
+                    ),
                 ]
             ))
             ->withdrawMoney(new WithdrawMoneyTransactionData(
@@ -318,15 +318,15 @@ class GetTransactionsTest extends TestCase
                         'bill',
                         100,
                         55
-                    )
+                    ),
                 ]
             ))
             ->persist();
 
         $response = $this->getJson(route('transactions.index', [
-            'filter' =>[
-                'type' => 'withdraw'
-            ]
+            'filter' => [
+                'type' => 'withdraw',
+            ],
         ]));
 
         $response->assertOk()
