@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -120,31 +121,32 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse|UserLogoutResponseResource
     {
-        if(!EnsureFrontendRequestsAreStateful::fromFrontend($request)) {
-            $request->user()->currentAccessToken()->delete();
+        if (! EnsureFrontendRequestsAreStateful::fromFrontend($request)) {
+            /** @var PersonalAccessToken */
+            $accessToken = $request->user()->currentAccessToken();
+            $accessToken->delete();
 
             return new UserLogoutResponseResource(
                 true,
-                message: "Logout successful."
+                message: 'Logout successful.'
             );
         }
-
 
         auth('web')->logout();
 
         if ($request->hasSession()) {
             $request->session()->invalidate();
- 
+
             $request->session()->regenerateToken();
         }
 
-        if(!$request->wantsJson()) {
+        if (! $request->wantsJson()) {
             return redirect('/');
         }
 
         return new UserLogoutResponseResource(
             true,
-            message: "Logout successful."
+            message: 'Logout successful.'
         );
     }
 }

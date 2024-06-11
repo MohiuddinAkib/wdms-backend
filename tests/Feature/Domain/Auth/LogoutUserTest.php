@@ -25,13 +25,13 @@ class LogoutUserTest extends TestCase
         Sanctum::actingAs($user, guard: 'web');
 
         $response = $this->postJson(route('auth.logout'), headers: [
-            'referer' => 'localhost'
+            'referer' => 'localhost',
         ]);
 
         $response->assertOk()
             ->assertJson([
                 'success' => true,
-                'message' => 'Logout successful.'
+                'message' => 'Logout successful.',
             ]);
         $this->assertFalse($this->isAuthenticated('web'));
     }
@@ -43,7 +43,7 @@ class LogoutUserTest extends TestCase
         Sanctum::actingAs($user, guard: 'web');
 
         $response = $this->post(route('auth.logout'), headers: [
-            'origin' => 'localhost'
+            'origin' => 'localhost',
         ]);
 
         $response->assertRedirect();
@@ -60,7 +60,7 @@ class LogoutUserTest extends TestCase
         $response->assertOk()
             ->assertJson([
                 'success' => true,
-                'message' => 'Logout successful.'
+                'message' => 'Logout successful.',
             ]);
 
     }
