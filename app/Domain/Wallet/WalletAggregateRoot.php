@@ -16,6 +16,7 @@ use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
 use App\Domain\Wallet\Exceptions\WalletDenominationAlreadyExistsException;
 use App\Domain\Wallet\Exceptions\WalletDenominationBalanceExistsException;
 use Brick\Math\BigDecimal;
+use Brick\Math\RoundingMode;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
 
 class WalletAggregateRoot extends AggregateRoot
@@ -142,6 +143,7 @@ class WalletAggregateRoot extends AggregateRoot
     protected function applyMoneyAdded(MoneyAdded $event)
     {
         $this->balance = (string) BigDecimal::of($this->balance)
-            ->plus($event->transactionData->total());
+            ->plus($event->transactionData->total())
+            ->toScale(2, RoundingMode::DOWN);
     }
 }

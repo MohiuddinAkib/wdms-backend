@@ -61,7 +61,6 @@ class CreateWalletTest extends TestCase
 
     public function test_should_create_wallet_with_proper_data(): void
     {
-        $this->withoutExceptionHandling();
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 

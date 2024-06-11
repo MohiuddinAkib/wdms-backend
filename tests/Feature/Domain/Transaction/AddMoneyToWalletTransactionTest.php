@@ -167,7 +167,6 @@ class AddMoneyToWalletTransactionTest extends TestCase
 
     public function test_should_add_money_to_wallet(): void
     {
-        $this->withoutExceptionHandling();
         config()->set('wallet', [
             'currencies' => [
                 'bdt' => [

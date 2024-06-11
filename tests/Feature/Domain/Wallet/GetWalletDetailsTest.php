@@ -40,7 +40,6 @@ class GetWalletDetailsTest extends TestCase
 
     public function test_should_be_able_to_see_wallet_details(): void
     {
-        $this->withoutExceptionHandling();
         $user = User::factory()->create();
         /** @var Wallet */
         $wallet = WalletFactory::new()->withUserUuid($user->uuid)->create();

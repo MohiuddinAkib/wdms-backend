@@ -166,7 +166,6 @@ class AddDenominationToWalletTest extends TestCase
 
     public function test_should_add_denomination_to_wallet(): void
     {
-        $this->withoutExceptionHandling();
         $user = User::factory()->create();
         Sanctum::actingAs($user);
         $wallet = WalletFactory::new()

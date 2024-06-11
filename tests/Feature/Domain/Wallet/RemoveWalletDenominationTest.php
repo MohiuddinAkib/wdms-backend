@@ -133,7 +133,6 @@ class RemoveWalletDenominationTest extends TestCase
 
     public function test_should_delete_wallet_denomination(): void
     {
-        $this->withoutExceptionHandling();
         $user = User::factory()->create();
         Sanctum::actingAs($user);
         $wallet = WalletFactory::new()->withCurrency(

@@ -22,8 +22,6 @@ class GetWalletsTest extends TestCase
 
     public function test_should_be_able_to_see_owning_wallet_list(): void
     {
-        $this->withoutExceptionHandling();
-
         $user = User::factory()->create();
         Sanctum::actingAs($user);
         $wallet1 = WalletFactory::new()->withUserUuid($user->uuid)->withCurrency('bdt')->create();
