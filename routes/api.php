@@ -25,6 +25,11 @@ Route::middleware('guest')
         Route::post('request-otp', [AuthController::class, 'requestOtp'])->name('request-otp');
     });
 
+// ENDPOINTS TO LOGOUT
+Route::post('auth/logout', [AuthController::class, 'logout'])
+    ->middleware('auth:sanctum')
+    ->name('auth.logout');
+
 // ENDPOINTS TO GET CURRENCIES
 Route::get('currencies', [CurrencyController::class, 'index'])->name('currencies.index');
 // ENDPOINTS TO GET DENOMINATIONS FOR A CURRENCY

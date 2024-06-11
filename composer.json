@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.2",
         "brick/math": "^0.12.1",
+        "doctrine/dbal": "^4.0",
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",

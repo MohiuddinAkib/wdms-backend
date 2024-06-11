@@ -9,6 +9,7 @@ use App\Domain\Auth\Notifications\LoginOtpNotification;
 use App\Domain\Auth\Resources\LoginUserResponseResource;
 use App\Domain\Auth\Resources\RegisterUserResponseResource;
 use App\Domain\Auth\Resources\RequestOtpResponseResource;
+use App\Domain\Auth\Resources\UserLogoutResponseResource;
 use App\Domain\User\UserAggregateRoot;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -115,5 +116,35 @@ class AuthController extends Controller
 
         // IF NOT SPA BUT TRADITIONAL HTML SERVED BY LARAVEL
         return redirect()->intended('/');
+    }
+
+    public function logout(Request $request): RedirectResponse|UserLogoutResponseResource
+    {
+        if(!EnsureFrontendRequestsAreStateful::fromFrontend($request)) {
+            $request->user()->currentAccessToken()->delete();
+
+            return new UserLogoutResponseResource(
+                true,
+                message: "Logout successful."
+            );
+        }
+
+
+        auth('web')->logout();
+
+        if ($request->hasSession()) {
+            $request->session()->invalidate();
+ 
+            $request->session()->regenerateToken();
+        }
+
+        if(!$request->wantsJson()) {
+            return redirect('/');
+        }
+
+        return new UserLogoutResponseResource(
+            true,
+            message: "Logout successful."
+        );
     }
 }

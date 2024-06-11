@@ -49,7 +49,6 @@ class WalletsProjector extends Projector
 
     public function onMoneyAdded(MoneyAdded $event): void
     {
-        // REFACTOR INTO SAGA
         DB::transaction(function () use ($event) {
             $denominations = $event->transactionData->denominations;
 
@@ -78,7 +77,6 @@ class WalletsProjector extends Projector
 
     public function onMoneyWithdrawn(MoneyWithdrawn $event): void
     {
-        // REFACTOR INTO SAGA
         DB::transaction(function () use ($event) {
             $denominations = $event->transactionData->denominations;
 
