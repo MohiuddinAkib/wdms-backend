@@ -4,6 +4,7 @@ namespace App\Domain\Wallet\Resources;
 
 use App\Domain\Wallet\Projections\Wallet;
 use Spatie\LaravelData\Attributes\MapOutputName;
+use Spatie\LaravelData\Lazy;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 use Spatie\LaravelData\Resource;
 
@@ -15,7 +16,7 @@ class WalletResource extends Resource
         public string $id,
         public string $currency,
         public string $balance,
-        public array $denominations
+        public Lazy|array $denominations
     ) {
     }
 
@@ -25,7 +26,7 @@ class WalletResource extends Resource
             $wallet->getKey(),
             $wallet->currency,
             (string) $wallet->balance,
-            WalletDenominationResource::collect($wallet->denominations)->all()
+            Lazy::create(fn() => WalletDenominationResource::collect($wallet->denominations)->all())->defaultIncluded()
         );
     }
 }

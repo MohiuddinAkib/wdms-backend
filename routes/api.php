@@ -52,13 +52,15 @@ Route::middleware('auth:sanctum')->group(function () {
         });
 
     Route::controller(TransactionController::class)
-        ->prefix('transactions/{wallet}')
+        ->prefix('transactions')
         ->name('transactions.')
         ->group(function () {
-            Route::post('/deposit', 'deposit')->name('deposit')
+            Route::post('{wallet}/deposit', 'deposit')->name('deposit')
                 ->can('update-wallet', 'wallet');
 
-            Route::post('/withdraw', 'withdraw')->name('withdraw')
+            Route::post('{wallet}/withdraw', 'withdraw')->name('withdraw')
                 ->can('withdraw-wallet', 'wallet');
+
+            Route::get('transactions', 'index')->name('index');
         });
 });

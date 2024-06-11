@@ -27,8 +27,8 @@ class Wallet extends Projection
 
     public function deposit(float|int|string $amount)
     {
-        $result = BigDecimal::of($amount)
-            ->plus(BigDecimal::of($this->balance))
+        $result = BigDecimal::of($this->balance)
+            ->plus(BigDecimal::of($amount))
             ->toScale(2, RoundingMode::DOWN);
 
         $this->update([
@@ -38,8 +38,8 @@ class Wallet extends Projection
 
     public function withdraw(float|int|string $amount)
     {
-        $result = BigDecimal::of($amount)
-            ->minus(BigDecimal::of($this->balance))
+        $result = BigDecimal::of($this->balance)
+            ->minus(BigDecimal::of($amount))
             ->toScale(2, RoundingMode::DOWN);
 
         $this->update([

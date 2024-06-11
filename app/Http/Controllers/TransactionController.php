@@ -13,11 +13,17 @@ use App\Domain\Wallet\Dto\WithdrawMoneyTransactionItemRequestData;
 use App\Domain\Wallet\Dto\WithdrawMoneyTransactionRequestData;
 use App\Domain\Wallet\Projections\Denomination;
 use App\Domain\Wallet\Projections\Wallet;
+use App\Domain\Wallet\Queries\TransactionIndexQuery;
 use App\Domain\Wallet\Resource\WithdrawMoneyTransactionResponseResource;
 use App\Domain\Wallet\Resources\AddMoneyTransactionResponseResource;
+use App\Domain\Wallet\Resources\TransactionResource;
 use App\Domain\Wallet\Resources\WalletResource;
 use App\Domain\Wallet\WalletAggregateRoot;
+use Cache;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Spatie\LaravelData\DataCollection;
 use Str;
 
 class TransactionController extends Controller
@@ -25,9 +31,16 @@ class TransactionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request, TransactionIndexQuery $query): LengthAwarePaginator|DataCollection
     {
-        //
+        $cacheKey = $request->cacheKey();
+
+        return Cache::tags(['transactions', auth()->id()])
+            ->remember(
+                $cacheKey,
+                now()->addMinutes(5),
+                fn() => TransactionResource::collect($query->paginate())
+            );
     }
 
     /**
@@ -69,6 +82,11 @@ class TransactionController extends Controller
                 $dtos->all()
             ))
             ->persist();
+
+        // INVALIDATE ALL TRANSACTION CACHE FOR THIS USER
+        Cache::tags(['transactions', auth()->id()])->flush();
+        // INVALIDATE ALL WALLET CACHE FOR THIS USER
+        Cache::tags(['wallets', auth()->id()])->flush();
 
         $wallet->refresh();
 
@@ -118,6 +136,11 @@ class TransactionController extends Controller
                     $dtos->all()
                 ))
                 ->persist();
+            
+            // INVALIDATE ALL TRANSACTION CACHE FOR THIS USER
+            Cache::tags(['transactions', auth()->id()])->flush();
+            // INVALIDATE ALL WALLET CACHE FOR THIS USER
+            Cache::tags(['wallets', auth()->id()])->flush();
 
             $wallet->refresh();
 

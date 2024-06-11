@@ -12958,6 +12958,15 @@ namespace Illuminate\Support\Facades {
         {
                         return \Illuminate\Http\Request::hasValidRelativeSignatureWhileIgnoring($ignoreQuery);
         }
+                    /**
+         * 
+         *
+         * @see \App\Providers\AppServiceProvider::boot()
+         * @static 
+         */        public static function cacheKey()
+        {
+                        return \Illuminate\Http\Request::cacheKey();
+        }
             }
             /**
      * 
@@ -18164,6 +18173,15 @@ namespace Illuminate\Http {
          */        public static function hasValidRelativeSignatureWhileIgnoring($ignoreQuery = [])
         {
                         return \Illuminate\Http\Request::hasValidRelativeSignatureWhileIgnoring($ignoreQuery);
+        }
+                    /**
+         * 
+         *
+         * @see \App\Providers\AppServiceProvider::boot()
+         * @static 
+         */        public static function cacheKey()
+        {
+                        return \Illuminate\Http\Request::cacheKey();
         }
             }
     }
