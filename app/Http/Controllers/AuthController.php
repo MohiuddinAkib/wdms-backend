@@ -17,7 +17,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
@@ -88,7 +87,7 @@ class AuthController extends Controller
             throw $validationError;
         }
 
-        if (! EnsureFrontendRequestsAreStateful::fromFrontend($request)) {
+        if (! $request->fromStatefulFrontend()) {
             // FOR NON STATEFUL API CLIENT NEED ACCESS TOKEN
             $token = $user->createToken('auth-token')->plainTextToken;
 
@@ -121,7 +120,7 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse|UserLogoutResponseResource
     {
-        if (! EnsureFrontendRequestsAreStateful::fromFrontend($request)) {
+        if (! $request->fromStatefulFrontend()) {
             /** @var PersonalAccessToken */
             $accessToken = $request->user()->currentAccessToken();
             $accessToken->delete();

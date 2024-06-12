@@ -10,6 +10,7 @@ use Gate;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use RateLimiter;
 
 class AppServiceProvider extends ServiceProvider
@@ -53,6 +54,11 @@ class AppServiceProvider extends ServiceProvider
             $rememberKey = sha1($fullUrl);
 
             return $rememberKey;
+        });
+
+        Request::macro('fromStatefulFrontend', function () {
+            /** @var Request $this */
+            return EnsureFrontendRequestsAreStateful::fromFrontend($this);
         });
     }
 }

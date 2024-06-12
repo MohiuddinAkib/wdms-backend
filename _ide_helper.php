@@ -12967,6 +12967,15 @@ namespace Illuminate\Support\Facades {
         {
                         return \Illuminate\Http\Request::cacheKey();
         }
+                    /**
+         * 
+         *
+         * @see \App\Providers\AppServiceProvider::boot()
+         * @static 
+         */        public static function fromStatefulFrontend()
+        {
+                        return \Illuminate\Http\Request::fromStatefulFrontend();
+        }
             }
             /**
      * 
@@ -18182,6 +18191,15 @@ namespace Illuminate\Http {
          */        public static function cacheKey()
         {
                         return \Illuminate\Http\Request::cacheKey();
+        }
+                    /**
+         * 
+         *
+         * @see \App\Providers\AppServiceProvider::boot()
+         * @static 
+         */        public static function fromStatefulFrontend()
+        {
+                        return \Illuminate\Http\Request::fromStatefulFrontend();
         }
             }
     }
