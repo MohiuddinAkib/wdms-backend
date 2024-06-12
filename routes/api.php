@@ -6,6 +6,7 @@ use App\Http\Controllers\DenominationController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WalletDenominationController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // ENDPOINT TO GET PROFILE INFO
