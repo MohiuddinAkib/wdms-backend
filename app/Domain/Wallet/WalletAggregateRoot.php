@@ -15,6 +15,7 @@ use App\Domain\Wallet\Events\WalletDenominationRemoved;
 use App\Domain\Wallet\Exceptions\NotSufficientBalanceException;
 use App\Domain\Wallet\Exceptions\UnknownDenominationException;
 use App\Domain\Wallet\Exceptions\WalletAlreadyExistsException;
+use App\Domain\Wallet\Exceptions\WalletAlreadyRemovedException;
 use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
 use App\Domain\Wallet\Exceptions\WalletDenominationAlreadyExistsException;
 use App\Domain\Wallet\Exceptions\WalletDenominationBalanceExistsException;
@@ -64,6 +65,8 @@ class WalletAggregateRoot extends AggregateRoot
 
     public function deleteWallet(): self
     {
+        throw_unless($this->created, WalletAlreadyRemovedException::class);
+
         // WON'T ALLOW TO DELETE IF THERE IS BALANCE IN THE WALLET
         throw_if(
             BigDecimal::of($this->balance)->compareTo(0) > 0,
@@ -77,14 +80,19 @@ class WalletAggregateRoot extends AggregateRoot
         return $this;
     }
 
+    protected function applyDeleteWallet(WalletDeleted $event): void
+    {
+        $this->created = false;
+    }
+
     public function addWalletDenomination(AddWalletDenominationData $denominationData): self
     {
         // CHECKING IF THE DENOMINATION IS ALREADY ADDED TO THIS WALLET
         throw_if(
             ($denominationData->type === 'coin'
-                && array_key_exists($denominationData->name, $this->coins))
+                && in_array($denominationData->name, $this->coins))
             || ($denominationData->type === 'bill'
-                && array_key_exists($denominationData->name, $this->bills)),
+                && in_array($denominationData->name, $this->bills)),
             WalletDenominationAlreadyExistsException::class,
             $denominationData->name,
             $denominationData->type
@@ -125,10 +133,28 @@ class WalletAggregateRoot extends AggregateRoot
         // CHECKING IF THE DENOMINATION HAS BALANCE
         throw_if($data->quantity > 0, WalletDenominationBalanceExistsException::class);
         $this->recordThat(new WalletDenominationRemoved(
-            denominationId: $data->denominationId
+            denominationId: $data->denominationId,
+            name: $data->name,
+            type: $data->type
         ));
 
         return $this;
+    }
+
+    protected function applyWalletDenominationRemoved(WalletDenominationRemoved $event): void
+    {
+        // REMOVING FROM TRACKED COINS IN THE WALLET
+        if ($event->type === 'coin') {
+            $this->coins = array_filter($this->coins, fn (string $trackedEvent) => $trackedEvent !== $event->name);
+        }
+
+        // REMOVING FROM TRACKED BILLS IN THE WALLET
+        if ($event->type === 'bill') {
+            $this->bills = array_filter($this->bills, fn (string $trackedEvent) => $trackedEvent !== $event->name);
+        }
+
+        // REMOVING FROM TRACKED COINS AND BILLS ID
+        $this->denominationIds[] = array_filter($this->denominationIds, fn (string $trackedEventId) => $trackedEventId !== $event->denominationId);
     }
 
     public function addMoney(AddMoneyTransactionData $data): self

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Domain\Wallet\Projections\Wallet;
+use App\Domain\Wallet\WalletAggregateRoot;
 use Faker\Generator;
 use Illuminate\Container\Container;
 
@@ -40,12 +41,20 @@ class WalletFactory
             $extra
         );
 
-        return Wallet::new()->writeable()->create($state);
-    }
+         WalletAggregateRoot::retrieve($state['uuid'])
+            ->createWallet($state['user_id'], $state['currency'])
+            ->persist();
 
-    public function count(int $num)
-    {
-        return $this->new([], $num);
+        /** @var Wallet */
+        $wallet = Wallet::find($state['uuid']);
+
+        if(array_key_exists('balance', $state)) {
+            $wallet->writeable()->update([
+                'balance' => $state['balance']
+            ]);
+        }
+
+        return $wallet;
     }
 
     public function withUserUuid(string $userUuid): self

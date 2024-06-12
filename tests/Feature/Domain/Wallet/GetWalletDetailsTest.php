@@ -68,7 +68,7 @@ class GetWalletDetailsTest extends TestCase
                 'success' => true,
                 'data' => [
                     'id' => $wallet->getKey(),
-                    'balance' => '0.00',
+                    'balance' => '10.05',
                     'currency' => $wallet->currency,
                     'denominations' => [
                         [

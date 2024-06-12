@@ -2,9 +2,14 @@
 
 namespace Database\Factories;
 
+use App\Domain\Wallet\Dto\AddMoneyTransactionData;
+use App\Domain\Wallet\Dto\AddMoneyTransactionItemData;
+use App\Domain\Wallet\Dto\AddWalletDenominationData;
 use App\Domain\Wallet\Projections\Denomination;
+use App\Domain\Wallet\WalletAggregateRoot;
 use Faker\Generator;
 use Illuminate\Container\Container;
+use Str;
 
 class DenominationFactory
 {
@@ -39,13 +44,46 @@ class DenominationFactory
             $extra
         );
 
-        return Denomination::new()->writeable()->create($state);
+         $aggregate = WalletAggregateRoot::retrieve($state['wallet_id'])
+            ->addWalletDenomination(new AddWalletDenominationData(
+                $state['uuid'],
+                $state['name'],
+                $state['value'],
+                $state['type']
+            ));
+
+        if(data_get($state, 'quantity', 0) > 0) {
+            $aggregate->addMoney(new AddMoneyTransactionData(
+                $state['wallet_id'],
+                [
+                    new AddMoneyTransactionItemData(
+                        (string) Str::uuid(),
+                        (string) Str::uuid(),
+                        $state['uuid'],
+                        $state['type'],
+                        $state['value'],
+                        $state['quantity']
+                    )
+                ]
+            ));
+        }
+
+        $aggregate->persist();
+
+        return Denomination::find($state['uuid']);
     }
 
     public function withWalletUuid(string $walletUuid): self
     {
         return $this->state([
             'wallet_id' => $walletUuid,
+        ]);
+    }
+
+    public function withDenominationUUid(string $uuid): self
+    {
+        return $this->state([
+            'uuid' => $uuid,
         ]);
     }
 

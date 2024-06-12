@@ -143,16 +143,20 @@ class RemoveWalletDenominationTest extends TestCase
 
         $denominationId = (string) Str::uuid();
 
-        WalletAggregateRoot::retrieve($wallet->getKey())
-            ->addWalletDenomination(
-                new AddWalletDenominationData(
-                    $denominationId,
-                    '5 Poisha',
-                    0.05,
-                    'coin'
-                )
+        DenominationFactory::new()
+            ->withWalletUuid($wallet->getKey())
+            ->withDenominationUUid($denominationId)
+            ->withName(
+                '5 Poisha'
             )
-            ->persist();
+            ->withValue(
+                0.05
+            )
+            ->withType(
+                'coin'
+            )
+            ->withQuantity(0)
+            ->create();
 
         $mockTaggable = Mockery::mock(TaggableStore::class);
         Cache::shouldReceive('tags')

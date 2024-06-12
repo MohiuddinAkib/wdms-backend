@@ -7,7 +7,9 @@ use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 class WalletDenominationRemoved extends ShouldBeStored
 {
     public function __construct(
-        public string $denominationId
+        public string $denominationId,
+        public string $name,
+        public string $type
     ) {
     }
 }
