@@ -3,8 +3,6 @@
 namespace Tests\Feature\Domain\Wallet;
 
 use App\Domain\Wallet\Exceptions\WalletBalanceNotEmptyException;
-use App\Domain\Wallet\Projections\Wallet;
-use App\Domain\Wallet\WalletAggregateRoot;
 use App\Models\User;
 use Cache;
 use Database\Factories\WalletFactory;
@@ -64,7 +62,7 @@ class DeleteWalletTest extends TestCase
     public function test_should_delete_zero_balanced_wallet(): void
     {
         $user = User::factory()->create();
-        $walletId = (string)Str::uuid();
+        $walletId = (string) Str::uuid();
 
         $wallet = WalletFactory::new()
             ->withUserUuid($user->uuid)

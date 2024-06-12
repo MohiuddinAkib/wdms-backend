@@ -41,16 +41,16 @@ class WalletFactory
             $extra
         );
 
-         WalletAggregateRoot::retrieve($state['uuid'])
+        WalletAggregateRoot::retrieve($state['uuid'])
             ->createWallet($state['user_id'], $state['currency'])
             ->persist();
 
         /** @var Wallet */
         $wallet = Wallet::find($state['uuid']);
 
-        if(array_key_exists('balance', $state)) {
+        if (array_key_exists('balance', $state)) {
             $wallet->writeable()->update([
-                'balance' => $state['balance']
+                'balance' => $state['balance'],
             ]);
         }
 

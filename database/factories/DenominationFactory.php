@@ -44,7 +44,7 @@ class DenominationFactory
             $extra
         );
 
-         $aggregate = WalletAggregateRoot::retrieve($state['wallet_id'])
+        $aggregate = WalletAggregateRoot::retrieve($state['wallet_id'])
             ->addWalletDenomination(new AddWalletDenominationData(
                 $state['uuid'],
                 $state['name'],
@@ -52,7 +52,7 @@ class DenominationFactory
                 $state['type']
             ));
 
-        if(data_get($state, 'quantity', 0) > 0) {
+        if (data_get($state, 'quantity', 0) > 0) {
             $aggregate->addMoney(new AddMoneyTransactionData(
                 $state['wallet_id'],
                 [
@@ -63,7 +63,7 @@ class DenominationFactory
                         $state['type'],
                         $state['value'],
                         $state['quantity']
-                    )
+                    ),
                 ]
             ));
         }
