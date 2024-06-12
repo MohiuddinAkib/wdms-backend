@@ -17,6 +17,7 @@
         "spatie/laravel-data": "^4.6",
         "spatie/laravel-event-sourcing": "^7.6",
         "spatie/laravel-query-builder": "^6.0",
+        "spatie/laravel-typescript-transformer": "^2.4",
         "tzsk/otp": "^8.0"
     },
     "require-dev": {
