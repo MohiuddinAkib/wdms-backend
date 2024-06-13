@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('denominations', function (Blueprint $table) {
             $table->foreignUuid('wallet_id')->constrained('wallets', 'uuid');
 
-            $table->unique(['wallet_id', 'name']);
+            $table->unique(['wallet_id', 'name', 'type']);
         });
     }
 

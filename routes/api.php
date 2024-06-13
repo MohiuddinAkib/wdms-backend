@@ -15,8 +15,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 // ENDPOINTS TO LOGIN, REGISTER AND REQUEST OTP
-Route::middleware('guest')
-    ->prefix('auth')
+Route::prefix('auth')
     ->name('auth.')
     ->group(function () {
         Route::post('register', [AuthController::class, 'register'])->name('register');
@@ -80,6 +79,6 @@ Route::middleware('auth:sanctum')->group(function () {
                 ->can('withdraw-wallet', 'wallet');
 
             // ENDPOINT TO GET TRANSACTION HISTORY
-            Route::get('transactions', 'index')->name('index');
+            Route::get('/', 'index')->name('index');
         });
 });

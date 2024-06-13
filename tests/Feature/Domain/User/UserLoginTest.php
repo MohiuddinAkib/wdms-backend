@@ -111,7 +111,7 @@ class UserLoginTest extends TestCase
             'otp' => (string) $otp,
         ],
             [
-                'referer' => 'localhost',
+                'referer' => config('sanctum.stateful'),
             ]);
 
         $response->assertOk()
@@ -136,7 +136,7 @@ class UserLoginTest extends TestCase
             'otp' => (string) $otp,
         ],
             [
-                'referer' => 'localhost',
+                'referer' => config('sanctum.stateful'),
             ]);
 
         $response

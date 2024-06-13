@@ -13,6 +13,7 @@ class TransactionResource extends Resource
 {
     public function __construct(
         public string $id,
+        public string $groupId,
         public WalletResource $wallet,
         public WalletDenominationResource $denomination,
         public string $type,
@@ -25,6 +26,7 @@ class TransactionResource extends Resource
     {
         return new self(
             $transaction->getKey(),
+            $transaction->group_id,
             WalletResource::from($transaction->wallet)->exclude('denominations'),
             WalletDenominationResource::from($transaction->denomination),
             $transaction->type,

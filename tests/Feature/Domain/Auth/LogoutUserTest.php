@@ -19,13 +19,13 @@ class LogoutUserTest extends TestCase
         $response->assertUnauthorized();
     }
 
-    public function test_user_can_logout_from_frontend_spa(): void
+    public function test_user_can_logout_from_stateful_frontend(): void
     {
         $user = User::factory()->create();
         Sanctum::actingAs($user, guard: 'web');
 
         $response = $this->postJson(route('auth.logout'), headers: [
-            'referer' => 'localhost',
+            'referer' => config('sanctum.stateful'),
         ]);
 
         $response->assertOk()
@@ -43,7 +43,7 @@ class LogoutUserTest extends TestCase
         Sanctum::actingAs($user, guard: 'web');
 
         $response = $this->post(route('auth.logout'), headers: [
-            'origin' => 'localhost',
+            'origin' => config('sanctum.stateful'),
         ]);
 
         $response->assertRedirect();
