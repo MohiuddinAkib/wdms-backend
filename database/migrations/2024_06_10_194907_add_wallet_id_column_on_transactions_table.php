@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transactions', function (Blueprint $table) {
-            $table->foreignUuid('wallet_id')->constrained('wallets', 'uuid');
+            $table->uuid('wallet_id');
+            $table->string('wallet_currency');
         });
     }
 

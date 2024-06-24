@@ -10,6 +10,7 @@ class AddMoneyTransactionData
     /** @param array<AddMoneyTransactionItemData> $denominations */
     public function __construct(
         public string $walletUuid,
+        public string $walletCurrency,
         public array $denominations
     ) {
     }

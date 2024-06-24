@@ -19,7 +19,8 @@ class TransactionIndexQuery extends QueryBuilder
 
         $this->allowedFilters(
             'type',
-            AllowedFilter::exact('wallet_id', 'wallet.uuid'),
+            'wallet_currency',
+            AllowedFilter::exact('wallet_id'),
             AllowedFilter::scope('happened_at_between')
         );
     }

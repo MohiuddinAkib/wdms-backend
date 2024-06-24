@@ -14,8 +14,11 @@ class TransactionResource extends Resource
     public function __construct(
         public string $id,
         public string $groupId,
-        public WalletResource $wallet,
-        public WalletDenominationResource $denomination,
+        public string $walletId,
+        public string $walletCurrency,
+        public string $denominationId,
+        public string $denominationType,
+        public float|int $denominationValue,
         public string $type,
         public int $quantity,
         public Carbon $happenedAt,
@@ -27,10 +30,13 @@ class TransactionResource extends Resource
         return new self(
             $transaction->getKey(),
             $transaction->group_id,
-            WalletResource::from($transaction->wallet)->exclude('denominations'),
-            WalletDenominationResource::from($transaction->denomination),
+            $transaction->wallet_id,
+            $transaction->wallet_currency,
+            $transaction->denomination_id,
+            $transaction->denomination_type,
+            $transaction->denomination_value,
             $transaction->type,
-            $transaction->quantity,
+            $transaction->denomination_quantity,
             $transaction->happened_at,
         );
     }

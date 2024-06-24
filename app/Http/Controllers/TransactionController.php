@@ -80,6 +80,7 @@ class TransactionController extends Controller
         WalletAggregateRoot::retrieve($wallet->getKey())
             ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 $dtos->all()
             ))
             ->persist();
@@ -135,6 +136,7 @@ class TransactionController extends Controller
         WalletAggregateRoot::retrieve($wallet->getKey())
             ->withDrawMoney(new WithdrawMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 $dtos->all()
             ))
             ->persist();

@@ -55,6 +55,7 @@ class GetTransactionsTest extends TestCase
             ))
             ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new AddMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -76,6 +77,7 @@ class GetTransactionsTest extends TestCase
             ))
             ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new AddMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -89,6 +91,7 @@ class GetTransactionsTest extends TestCase
             ))
             ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new AddMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -102,6 +105,7 @@ class GetTransactionsTest extends TestCase
             ))
             ->withdrawMoney(new WithdrawMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new WithdrawMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -121,10 +125,8 @@ class GetTransactionsTest extends TestCase
             ->assertJson([
                 'data' => [
                     [
-                        'wallet' => [
-                            'id' => $wallet->getKey(),
-                            'balance' => '6140.00',
-                        ],
+                        'wallet_id' => $wallet->getKey(),
+                        'wallet_currency' => $wallet->currency,
                     ],
                 ],
             ]);
@@ -157,6 +159,7 @@ class GetTransactionsTest extends TestCase
             ))
             ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new AddMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -178,6 +181,7 @@ class GetTransactionsTest extends TestCase
             ))
             ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new AddMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -191,6 +195,7 @@ class GetTransactionsTest extends TestCase
             ))
             ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new AddMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -204,6 +209,7 @@ class GetTransactionsTest extends TestCase
             ))
             ->withdrawMoney(new WithdrawMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new WithdrawMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -223,14 +229,13 @@ class GetTransactionsTest extends TestCase
             ],
         ]));
 
+
         $response->assertOk()
             ->assertJson([
                 'data' => [
                     [
-                        'wallet' => [
-                            'id' => $wallet->getKey(),
-                            'balance' => '6140.00',
-                        ],
+                        'wallet_id' => $wallet->getKey(),
+                        'wallet_currency' => $wallet->currency,
                     ],
                 ],
             ]);
@@ -263,6 +268,7 @@ class GetTransactionsTest extends TestCase
             ))
             ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new AddMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -284,6 +290,7 @@ class GetTransactionsTest extends TestCase
             ))
             ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new AddMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -297,6 +304,7 @@ class GetTransactionsTest extends TestCase
             ))
             ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new AddMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -310,6 +318,7 @@ class GetTransactionsTest extends TestCase
             ))
             ->withdrawMoney(new WithdrawMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new WithdrawMoneyTransactionItemData(
                         (string) Str::uuid(),

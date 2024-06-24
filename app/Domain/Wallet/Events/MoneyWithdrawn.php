@@ -10,6 +10,7 @@ class MoneyWithdrawn extends ShouldBeStored
 {
     public function __construct(
         public string $walletId,
+        public string $walletCurrency,
         public WithdrawMoneyTransactionData $transactionData,
         public Carbon $happenedAt
     ) {

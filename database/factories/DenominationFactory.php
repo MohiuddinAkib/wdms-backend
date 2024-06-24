@@ -39,6 +39,7 @@ class DenominationFactory
         $state = array_merge(
             [
                 'uuid' => $this->faker->uuid(),
+                'wallet_currency' => 'bdt'
             ],
             $this->attributes,
             $extra
@@ -55,6 +56,7 @@ class DenominationFactory
         if (data_get($state, 'quantity', 0) > 0) {
             $aggregate->addMoney(new AddMoneyTransactionData(
                 $state['wallet_id'],
+                $state['wallet_currency'],
                 [
                     new AddMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -71,6 +73,13 @@ class DenominationFactory
         $aggregate->persist();
 
         return Denomination::find($state['uuid']);
+    }
+
+    public function withWalletCurrency(string $walletCurrency): self
+    {
+        return $this->state([
+            'wallet_currency' => $walletCurrency,
+        ]);
     }
 
     public function withWalletUuid(string $walletUuid): self

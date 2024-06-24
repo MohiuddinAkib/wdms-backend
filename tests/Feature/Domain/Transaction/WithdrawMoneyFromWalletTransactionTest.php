@@ -162,6 +162,7 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
         WalletAggregateRoot::retrieve($wallet->getKey())
             ->addMoney(new AddMoneyTransactionData(
                 $wallet->getKey(),
+                $wallet->currency,
                 [
                     new AddMoneyTransactionItemData(
                         (string) Str::uuid(),
@@ -262,6 +263,7 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
             ->addMoney(
                 new AddMoneyTransactionData(
                     $wallet->getKey(),
+                    $wallet->currency,
                     [
                         new AddMoneyTransactionItemData(
                             (string) Str::uuid(),

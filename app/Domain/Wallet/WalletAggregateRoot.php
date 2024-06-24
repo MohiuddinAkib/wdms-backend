@@ -21,7 +21,10 @@ use App\Domain\Wallet\Exceptions\WalletDenominationAlreadyExistsException;
 use App\Domain\Wallet\Exceptions\WalletDenominationBalanceExistsException;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
+use Log;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
+
+use function Psy\debug;
 
 class WalletAggregateRoot extends AggregateRoot
 {
@@ -154,13 +157,14 @@ class WalletAggregateRoot extends AggregateRoot
         }
 
         // REMOVING FROM TRACKED COINS AND BILLS ID
-        $this->denominationIds[] = array_filter($this->denominationIds, fn (string $trackedEventId) => $trackedEventId !== $event->denominationId);
+        $this->denominationIds = array_filter($this->denominationIds, fn (string $trackedEventId) => $trackedEventId !== $event->denominationId);
     }
 
     public function addMoney(AddMoneyTransactionData $data): self
     {
         $this->recordThat(new MoneyAdded(
             walletId: $this->uuid(),
+            walletCurrency: $data->walletCurrency,
             transactionData: $data,
             happenedAt: now()
         ));
@@ -181,6 +185,7 @@ class WalletAggregateRoot extends AggregateRoot
 
         $this->recordThat(new MoneyWithdrawn(
             walletId: $this->uuid(),
+            walletCurrency: $data->walletCurrency,
             transactionData: $data,
             happenedAt: now()
         ));

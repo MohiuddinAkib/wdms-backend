@@ -10,6 +10,7 @@ class MoneyAdded extends ShouldBeStored
 {
     public function __construct(
         public string $walletId,
+        public string $walletCurrency,
         public AddMoneyTransactionData $transactionData,
         public Carbon $happenedAt
     ) {

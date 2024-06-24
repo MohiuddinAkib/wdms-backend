@@ -59,12 +59,15 @@ class WalletsProjector extends Projector
             foreach ($denominations as $denomination) {
                 Transaction::new()->writeable()->create([
                     'uuid' => $denomination->transactionId,
+                    'type' => 'add',
                     'wallet_id' => $event->walletId,
+                    'wallet_currency' => $event->walletCurrency,
                     'group_id' => $denomination->transactionGroupId,
                     'denomination_id' => $denomination->denominationId,
-                    'type' => 'add',
-                    'quantity' => $denomination->quantity,
+                    'denomination_type' => $denomination->type,
+                    'denomination_quantity' => $denomination->quantity,
                     'happened_at' => $event->happenedAt,
+                    'denomination_value' => $denomination->value
                 ]);
 
                 Denomination::where('wallet_id', $event->walletId)
@@ -87,12 +90,15 @@ class WalletsProjector extends Projector
             foreach ($denominations as $denomination) {
                 Transaction::new()->writeable()->create([
                     'uuid' => $denomination->transactionId,
+                    'type' => 'withdraw',
                     'wallet_id' => $event->walletId,
+                    'wallet_currency' => $event->walletCurrency,
                     'group_id' => $denomination->transactionGroupId,
                     'denomination_id' => $denomination->denominationId,
-                    'type' => 'withdraw',
-                    'quantity' => $denomination->quantity,
+                    'denomination_type' => $denomination->type,
+                    'denomination_quantity' => $denomination->quantity,
                     'happened_at' => $event->happenedAt,
+                    'denomination_value' => $denomination->value
                 ]);
 
                 Denomination::where('wallet_id', $event->walletId)

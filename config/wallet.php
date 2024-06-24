@@ -77,5 +77,64 @@ return [
                 ],
             ],
         ],
+        'usd' => [
+            'name' => 'United States Dollar',
+            'coins' => [
+                [
+                    'name' => 'Penny',
+                    'value' => 0.01,
+                ],
+                [
+                    'name' => 'Nickel',
+                    'value' => 0.05,
+                ],
+                [
+                    'name' => 'Dime',
+                    'value' => 0.10,
+                ],
+                [
+                    'name' => 'Quarter',
+                    'value' => 0.25,
+                ],
+                [
+                    'name' => 'Half Dollar',
+                    'value' => 0.50,
+                ],
+                [
+                    'name' => 'Dollar Coin',
+                    'value' => 1.00,
+                ],
+            ],
+            'bills' => [
+                [
+                    'name' => '1 Dollar',
+                    'value' => 1,
+                ],
+                [
+                    'name' => '2 Dollar',
+                    'value' => 2,
+                ],
+                [
+                    'name' => '5 Dollar',
+                    'value' => 5,
+                ],
+                [
+                    'name' => '10 Dollar',
+                    'value' => 10,
+                ],
+                [
+                    'name' => '20 Dollar',
+                    'value' => 20,
+                ],
+                [
+                    'name' => '50 Dollar',
+                    'value' => 50,
+                ],
+                [
+                    'name' => '100 Dollar',
+                    'value' => 100,
+                ],
+            ],
+        ],
     ],
 ];

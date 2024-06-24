@@ -28,6 +28,7 @@ class RemoveWalletDenominationTest extends TestCase
             ->withUserUuid($user->uuid)
             ->create();
         $denomination = DenominationFactory::new()
+            ->withWalletCurrency($wallet->currency)
             ->withName('5 taka')
             ->withType('coin')
             ->withQuantity(6)
@@ -52,6 +53,7 @@ class RemoveWalletDenominationTest extends TestCase
             ->create();
 
         $denomination = DenominationFactory::new()
+            ->withWalletCurrency($wallet->currency)
             ->withName('5 taka')
             ->withType('coin')
             ->withQuantity(6)
@@ -73,6 +75,7 @@ class RemoveWalletDenominationTest extends TestCase
             ->withUserUuid($user->uuid)
             ->create();
         DenominationFactory::new()
+            ->withWalletCurrency($wallet->currency)
             ->withName('5 Taka')
             ->withType('coin')
             ->withQuantity(6)
@@ -88,6 +91,7 @@ class RemoveWalletDenominationTest extends TestCase
             ->withUserUuid($user2->uuid)
             ->create();
         $denomination = DenominationFactory::new()
+            ->withWalletCurrency($wallet->currency)
             ->withName('5 Taka')
             ->withType('bill')
             ->withValue(5)
@@ -111,7 +115,9 @@ class RemoveWalletDenominationTest extends TestCase
             ->create();
 
         $denomination = DenominationFactory::new()
+            ->withWalletCurrency($wallet->currency)
             ->withName('5 taka')
+            ->withWalletCurrency($wallet->currency)
             ->withType('coin')
             ->withQuantity(6)
             ->withValue(5)
@@ -142,6 +148,7 @@ class RemoveWalletDenominationTest extends TestCase
         $denominationId = (string) Str::uuid();
 
         DenominationFactory::new()
+            ->withWalletCurrency($wallet->currency)
             ->withWalletUuid($wallet->getKey())
             ->withDenominationUUid($denominationId)
             ->withName(
