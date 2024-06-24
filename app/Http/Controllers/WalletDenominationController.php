@@ -48,8 +48,8 @@ class WalletDenominationController extends Controller
             ->removeDenomination(
                 new RemoveWalletDenominationData(
                     $denomination->getKey(),
-                    $denomination->name,
                     $denomination->type,
+                    $denomination->name,
                     $denomination->quantity
                 )
             )

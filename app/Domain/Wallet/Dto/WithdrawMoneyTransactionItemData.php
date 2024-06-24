@@ -11,6 +11,7 @@ class WithdrawMoneyTransactionItemData
         public string $transactionId,
         public string $transactionGroupId,
         public string $denominationId,
+        public string $name,
         public string $type,
         public float|int $value,
         public int $quantity

@@ -62,6 +62,7 @@ class DenominationFactory
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $state['uuid'],
+                        $state['name'],
                         $state['type'],
                         $state['value'],
                         $state['quantity']

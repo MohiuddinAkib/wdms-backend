@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('uuid')->primary();
             $table->string('type');
             $table->uuid('denomination_id');
+            $table->string('denomination_name');
             $table->string('denomination_type');
             $table->unsignedInteger('denomination_quantity');
             $table->decimal('denomination_value');

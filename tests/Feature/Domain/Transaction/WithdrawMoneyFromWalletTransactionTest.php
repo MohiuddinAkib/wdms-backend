@@ -168,6 +168,7 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
                         (string) Str::uuid(),
                         $transactionGrpId,
                         $denominationId1,
+                        '5 taka',
                         'bill',
                         5,
                         5
@@ -176,6 +177,7 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
                         (string) Str::uuid(),
                         $transactionGrpId,
                         $denominationId2,
+                        '10 taka',
                         'bill',
                         10,
                         10
@@ -184,6 +186,7 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
                         (string) Str::uuid(),
                         $transactionGrpId,
                         $denominationId3,
+                        '5 poisha',
                         'coin',
                         0.05,
                         100
@@ -269,6 +272,7 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
                             (string) Str::uuid(),
                             $transactionGrpId,
                             $denominationId1,
+                            '5 taka',
                             'bill',
                             5,
                             5
@@ -277,6 +281,7 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
                             (string) Str::uuid(),
                             $transactionGrpId,
                             $denominationId2,
+                            '10 taka',
                             'bill',
                             10,
                             10
@@ -285,6 +290,7 @@ class WithdrawMoneyFromWalletTransactionTest extends TestCase
                             (string) Str::uuid(),
                             $transactionGrpId,
                             $denominationId3,
+                            '5 poisha',
                             'coin',
                             0.05,
                             100

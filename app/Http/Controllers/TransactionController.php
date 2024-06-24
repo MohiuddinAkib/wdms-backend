@@ -70,6 +70,7 @@ class TransactionController extends Controller
                     $transactionId,
                     $transactionGroupId,
                     $denomination->getKey(),
+                    $denomination->name,
                     $denomination->type,
                     $denomination->value,
                     $denominationIdQuantityMapping[$denomination->getKey()]
@@ -126,6 +127,7 @@ class TransactionController extends Controller
                     $transactionId,
                     $transactionGroupId,
                     $denomination->getKey(),
+                    $denomination->name,
                     $denomination->type,
                     $denomination->value,
                     $denominationIdQuantityMapping[$denomination->getKey()]

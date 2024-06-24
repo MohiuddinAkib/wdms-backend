@@ -61,6 +61,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId1,
+                        '100 Taka',
                         'bill',
                         100,
                         100
@@ -69,6 +70,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId2,
+                        '20 Taka',
                         'bill',
                         20,
                         10
@@ -83,6 +85,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId1,
+                        '100 Taka',
                         'bill',
                         100,
                         12
@@ -97,6 +100,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId2,
+                        '20 Taka',
                         'bill',
                         20,
                         12
@@ -111,6 +115,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId1,
+                        '100 Taka',
                         'bill',
                         100,
                         55
@@ -165,6 +170,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId1,
+                        '100 Taka',
                         'bill',
                         100,
                         100
@@ -173,6 +179,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId2,
+                        '20 Taka',
                         'bill',
                         20,
                         10
@@ -187,6 +194,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId1,
+                        '100 Taka',
                         'bill',
                         100,
                         12
@@ -201,6 +209,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId2,
+                        '20 Taka',
                         'bill',
                         20,
                         12
@@ -215,6 +224,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId1,
+                        '100 Taka',
                         'bill',
                         100,
                         55
@@ -274,6 +284,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId1,
+                        '100 Taka',
                         'bill',
                         100,
                         100
@@ -282,6 +293,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId2,
+                        '20 Taka',
                         'bill',
                         20,
                         10
@@ -296,6 +308,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId1,
+                        '100 Taka',
                         'bill',
                         100,
                         12
@@ -310,6 +323,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId2,
+                        '20 Taka',
                         'bill',
                         20,
                         12
@@ -324,6 +338,7 @@ class GetTransactionsTest extends TestCase
                         (string) Str::uuid(),
                         (string) Str::uuid(),
                         $denominationId1,
+                        '100 Taka',
                         'bill',
                         100,
                         55

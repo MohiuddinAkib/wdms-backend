@@ -90,6 +90,7 @@ class WalletAggregateRoot extends AggregateRoot
 
     public function addWalletDenomination(AddWalletDenominationData $denominationData): self
     {
+        // dump("adding wallet denomination", $this->coins, $this->bills);
         // CHECKING IF THE DENOMINATION IS ALREADY ADDED TO THIS WALLET
         throw_if(
             ($denominationData->type === 'coin'
